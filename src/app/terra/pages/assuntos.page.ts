@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 import { BibliotecaApiService } from '../services/biblioteca-api.service';
 import { Assunto } from '../types/biblioteca.types';
+import { exportTablePdf } from '../utils/export-pdf';
 import { mensagemApiErro } from '../utils/http-api-error';
 
 @Component({
@@ -20,6 +21,7 @@ export class AssuntosPage {
   private readonly fb = inject(FormBuilder);
 
   protected readonly assuntos = signal<Assunto[]>([]);
+  protected readonly termoBusca = signal('');
   protected readonly modalAberto = signal(false);
   protected readonly editando = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
@@ -29,6 +31,12 @@ export class AssuntosPage {
 
   protected readonly form = this.fb.group({
     descricao: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+  });
+
+  protected readonly assuntosFiltrados = computed(() => {
+    const termo = this.termoBusca().trim().toLowerCase();
+    if (!termo) return this.assuntos();
+    return this.assuntos().filter((s) => s.descricao.toLowerCase().includes(termo));
   });
 
   constructor() {
@@ -94,6 +102,21 @@ export class AssuntosPage {
         error: (err) =>
           this.erro.set(mensagemApiErro(err, 'Não foi possível remover (pode haver livros vinculados).')),
       });
+  }
+
+  protected exportarPdf(): void {
+    const rows = this.assuntosFiltrados().map((s) => [s.cod_as, s.descricao]);
+    exportTablePdf({
+      fileName: 'assuntos.pdf',
+      title: 'TJ Books · Assuntos',
+      subtitle: `${rows.length} registro(s)`,
+      head: ['Código', 'Descrição'],
+      body: rows,
+    });
+  }
+
+  protected onBuscaInput(ev: Event): void {
+    this.termoBusca.set((ev.target as HTMLInputElement).value);
   }
 
   private mostrarSucesso(mensagem: string): void {

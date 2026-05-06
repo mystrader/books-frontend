@@ -193,21 +193,25 @@
       <div class="hidden items-center gap-5 sm:flex">
         <button
           type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 bg-white text-stone-700 shadow-sm transition hover:bg-stone-50"
+          class="terra-theme-toggle group inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border bg-white motion-safe:transition-[transform,border-color,opacity,background-color,box-shadow,color] motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:-translate-y-px motion-safe:hover:bg-stone-50 motion-safe:hover:opacity-[0.97] motion-safe:hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e2f0ea] focus-visible:ring-offset-2 dark:ring-offset-zinc-900"
           (click)="toggleDarkMode()"
           [attr.aria-label]="darkMode() ? 'Ativar modo claro' : 'Ativar modo escuro'"
           [attr.title]="darkMode() ? 'Ativar modo claro' : 'Ativar modo escuro'"
         >
-          <span class="material-symbols-outlined text-[20px]" aria-hidden="true">{{
-            darkMode() ? 'light_mode' : 'dark_mode'
-          }}</span>
+          <span
+            class="material-symbols-outlined text-[20px] motion-safe:transition-[transform,color] motion-safe:duration-300 motion-safe:group-hover:scale-110"
+            [ngClass]="darkMode() ? 'text-amber-400' : ''"
+            style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+            aria-hidden="true"
+            >{{ darkMode() ? 'light_mode' : 'dark_mode' }}</span
+          >
         </button>
         <div class="flex items-center gap-3 border-l border-stone-200 pl-4">
-          <span class="text-sm font-[family-name:var(--font-body)] text-[#2e3230]">Admin Terra</span>
+          <span class="text-sm font-[family-name:var(--font-body)] text-[#2e3230]">Admin André</span>
           <span
             class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#4a7c59] bg-stone-100/70 text-sm font-semibold text-[#4a7c59]"
             aria-hidden="true"
-            >AT</span
+            >AA</span
           >
         </div>
       </div>
@@ -216,5 +220,11 @@
     <main id="conteudo-principal" class="min-w-0 flex-1 overflow-x-hidden bg-[#f7f5f2]">
       <router-outlet />
     </main>
+
+    <footer class="border-t border-stone-200/60 bg-white px-4 py-3">
+      <p class="text-center text-xs text-zinc-500">
+        TJ Books · Projeto acadêmico · {{ dataProjeto | date: 'dd/MM/yyyy' }}
+      </p>
+    </footer>
   </div>
 </div>

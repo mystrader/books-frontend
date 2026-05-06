@@ -313,9 +313,10 @@ export class DashboardPage {
     const url = `url(${JSON.stringify(capa)})`;
     return this.sanitizer.bypassSecurityTrustStyle(
       [
-        'linear-gradient(to right, rgb(247 245 241 / 1) 0%, rgb(247 245 241 / 0.998) 34%, rgb(247 245 241 / 0.95) 56%, rgb(247 245 241 / 0.72) 72%, rgb(247 245 241 / 0.36) 86%, rgb(247 245 241 / 0.12) 94%, transparent 99%)',
-        'linear-gradient(180deg, rgba(250, 246, 240, 0.62) 0%, rgba(250, 246, 240, 0.62) 100%)',
+        'linear-gradient(to right, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 0.99) 30%, rgb(255 255 255 / 0.94) 50%, rgb(255 255 255 / 0.72) 66%, rgb(255 255 255 / 0.35) 82%, rgba(255, 255, 255, 0.1) 93%, transparent 99%)',
+        'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%)',
         url,
+        'linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255))',
       ].join(', ')
     );
   }

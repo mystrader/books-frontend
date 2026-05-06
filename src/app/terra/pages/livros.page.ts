@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
   signal,
@@ -17,6 +18,7 @@ import { BibliotecaApiService } from '../services/biblioteca-api.service';
 import { Assunto, Autor, Livro, LivroListMeta } from '../types/biblioteca.types';
 import { applyBrlMaskFromInput, formatBrlMasked } from '../utils/brl-input-mask';
 import { capaOuPlaceholder } from '../utils/capa-placeholder';
+import { exportTablePdf } from '../utils/export-pdf';
 import { formatBrl } from '../utils/format-brl';
 import { mensagemApiErro } from '../utils/http-api-error';
 
@@ -35,6 +37,7 @@ export class LivrosPage {
   private readonly api = inject(BibliotecaApiService);
   private readonly fb = inject(FormBuilder);
   protected readonly livros = signal<Livro[]>([]);
+  protected readonly termoBusca = signal('');
   protected readonly meta = signal<LivroListMeta | null>(null);
   protected readonly pagina = signal(1);
   protected readonly autores = signal<Autor[]>([]);
@@ -49,6 +52,21 @@ export class LivrosPage {
 
   protected readonly formatBrl = formatBrl;
   protected readonly perPage = PER_PAGE;
+
+  protected readonly livrosFiltrados = computed(() => {
+    const termo = this.termoBusca().trim().toLowerCase();
+    if (!termo) return this.livros();
+    return this.livros().filter((l) => {
+      const titulo = l.titulo.toLowerCase();
+      const editora = (l.editora ?? '').toLowerCase();
+      const ano = String(l.ano_publicacao ?? '').toLowerCase();
+      const autores = this.nomesAutores(l).toLowerCase();
+      return (
+        titulo.includes(termo) || editora.includes(termo) || ano.includes(termo) || autores.includes(termo)
+      );
+    });
+  });
+
 
   protected readonly form = this.fb.group({
     titulo: ['', [Validators.required, Validators.minLength(2)]],
@@ -110,6 +128,11 @@ export class LivrosPage {
     const out: number[] = [];
     for (let i = from; i <= to; i++) out.push(i);
     return out;
+  }
+
+
+  protected onBuscaInput(ev: Event): void {
+    this.termoBusca.set((ev.target as HTMLInputElement).value);
   }
 
   protected abrirNovo(): void {
@@ -264,6 +287,25 @@ export class LivrosPage {
 
   protected assuntoMarcado(id: number): boolean {
     return (this.form.value.assunto_ids ?? []).includes(id);
+  }
+
+
+  protected exportarPdf(): void {
+    const rows = this.livrosFiltrados().map((l) => [
+      l.codl,
+      l.titulo,
+      l.editora ?? '—',
+      l.ano_publicacao ?? '—',
+      this.formatBrl(l.valor),
+      this.nomesAutores(l),
+    ]);
+    exportTablePdf({
+      fileName: 'inventario-livros.pdf',
+      title: 'TJ Books · Inventário de livros',
+      subtitle: `${rows.length} registro(s) na página atual`,
+      head: ['Código', 'Título', 'Editora', 'Ano', 'Valor', 'Autores'],
+      body: rows,
+    });
   }
 
   protected nomesAutores(l: Livro): string {

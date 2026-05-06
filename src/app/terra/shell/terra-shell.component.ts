@@ -38,6 +38,7 @@ export class TerraShellComponent {
   protected readonly viewportWidth = signal(typeof window === 'undefined' ? 1440 : window.innerWidth);
   protected readonly isDesktop = computed(() => this.viewportWidth() >= this.desktopBreakpoint);
   protected readonly formatBrl = formatBrl;
+  protected readonly dataProjeto = new Date();
 
   protected readonly sugestoes = computed(() => {
     const t = this.termoBusca().trim().toLowerCase();

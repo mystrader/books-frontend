@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs/operators';
 
 import { BibliotecaApiService } from '../services/biblioteca-api.service';
 import { Autor } from '../types/biblioteca.types';
+import { exportTablePdf } from '../utils/export-pdf';
 import { mensagemApiErro } from '../utils/http-api-error';
 
 @Component({
@@ -20,6 +21,7 @@ export class AutoresPage {
   private readonly fb = inject(FormBuilder);
 
   protected readonly autores = signal<Autor[]>([]);
+  protected readonly termoBusca = signal('');
   protected readonly modalAberto = signal(false);
   protected readonly editando = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
@@ -29,6 +31,12 @@ export class AutoresPage {
 
   protected readonly form = this.fb.group({
     nome: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+  });
+
+  protected readonly autoresFiltrados = computed(() => {
+    const termo = this.termoBusca().trim().toLowerCase();
+    if (!termo) return this.autores();
+    return this.autores().filter((a) => a.nome.toLowerCase().includes(termo));
   });
 
   constructor() {
@@ -94,6 +102,21 @@ export class AutoresPage {
         error: (err) =>
           this.erro.set(mensagemApiErro(err, 'Não foi possível remover (pode haver livros vinculados).')),
       });
+  }
+
+  protected exportarPdf(): void {
+    const rows = this.autoresFiltrados().map((a) => [a.cod_au, a.nome]);
+    exportTablePdf({
+      fileName: 'autores.pdf',
+      title: 'TJ Books · Autores',
+      subtitle: `${rows.length} registro(s)`,
+      head: ['Código', 'Nome'],
+      body: rows,
+    });
+  }
+
+  protected onBuscaInput(ev: Event): void {
+    this.termoBusca.set((ev.target as HTMLInputElement).value);
   }
 
   private mostrarSucesso(mensagem: string): void {

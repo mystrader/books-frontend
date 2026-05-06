@@ -4,7 +4,7 @@
     Voltar ao painel
   </a>
 
-  <header class="mb-6 flex flex-col gap-4 border-b border-zinc-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+  <header class="mb-4 pb-0">
     <div class="min-w-0">
       <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Inventário · Livros</p>
       <div class="mt-2 flex items-start gap-3">
@@ -17,22 +17,18 @@
           Registro de exemplar
         </h1>
       </div>
-      <div class="mt-2 flex max-w-2xl items-start gap-2 rounded-md border border-sky-200 bg-sky-50/70 px-3 py-2">
-        <p class="text-sm leading-relaxed text-zinc-600">
+      <div class="mt-2 flex w-full min-w-0 items-center gap-2 rounded-md border border-sky-200 bg-sky-50/70 px-3 py-2.5">
+        <p class="min-w-0 flex-1 text-sm leading-relaxed text-zinc-600">
           Listagem paginada para acervos grandes. Metadados e capas vêm da Open Library quando disponíveis.
         </p>
         <span
-          class="material-symbols-outlined order-first mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-100 text-[14px] leading-none text-sky-700"
+          class="material-symbols-outlined order-first inline-flex h-5 w-5 shrink-0 items-center justify-center self-center rounded-full bg-sky-100 text-[14px] leading-none text-sky-700"
           aria-label="Informações desta seção"
           title="A listagem usa paginação e integra metadados/capas quando disponíveis."
           >info</span
         >
       </div>
     </div>
-    <button type="button" (click)="abrirNovo()" class="terra-btn-default shrink-0">
-      <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">add</span>
-      Novo livro
-    </button>
   </header>
 
   @if (erro(); as e) {
@@ -41,10 +37,35 @@
   @if (sucesso(); as s) {
     <p class="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ s }}</p>
   }
+  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+    <div class="relative min-w-0 max-w-md flex-1">
+      <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-[20px]">
+        search
+      </span>
+      <input
+        type="search"
+        [value]="termoBusca()"
+        (input)="onBuscaInput($event)"
+        class="h-10 w-full rounded-md border border-zinc-200 bg-white pl-10 pr-3 text-sm text-zinc-800 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+        placeholder="Pesquisa local por título, editora, ano ou autor"
+        aria-label="Pesquisar inventário localmente"
+      />
+    </div>
+    <div class="flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <button type="button" (click)="exportarPdf()" class="terra-btn-outline h-9 px-4 text-sm">
+        <span class="material-symbols-outlined text-[18px] leading-none" aria-hidden="true">download</span>
+        Exportar PDF
+      </button>
+      <button type="button" (click)="abrirNovo()" class="terra-btn-default shrink-0">
+        <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">add</span>
+        Novo livro
+      </button>
+    </div>
+  </div>
 
   <div class="terra-table-wrap">
     <div class="w-full overflow-x-auto">
-      <table class="terra-data-table min-w-[860px]">
+      <table class="terra-data-table terra-data-table--sticky-actions min-w-[860px]">
         <thead>
           <tr>
             <th class="w-[4.5rem]">Capa</th>
@@ -53,7 +74,7 @@
             <th>Ano</th>
             <th>Valor</th>
             <th>Autores</th>
-            <th class="w-[1%] whitespace-nowrap text-right">Ações</th>
+            <th class="terra-table-col-actions w-[1%] whitespace-nowrap text-center">Ações</th>
           </tr>
         </thead>
       <tbody>
@@ -61,7 +82,7 @@
           <tr>
             <td colspan="7" class="py-16 text-center text-sm text-zinc-500">Carregando inventário…</td>
           </tr>
-        } @else if (livros().length === 0) {
+        } @else if (livrosFiltrados().length === 0) {
           <tr>
             <td colspan="7" class="py-14">
               <div
@@ -78,7 +99,7 @@
             </td>
           </tr>
         } @else {
-          @for (l of livros(); track l.codl) {
+          @for (l of livrosFiltrados(); track l.codl) {
             <tr>
               <td>
                 <a [routerLink]="['/livros', l.codl]" class="block w-14 shrink-0" [attr.aria-label]="'Ver ' + l.titulo">
@@ -101,8 +122,8 @@
               <td class="max-w-[200px] truncate text-zinc-600" [title]="nomesAutores(l)">
                 {{ nomesAutores(l) }}
               </td>
-              <td class="text-right align-middle">
-                <div class="ms-auto grid w-max grid-cols-1 justify-items-stretch gap-1.5">
+              <td class="terra-table-col-actions text-center align-middle">
+                <div class="mx-auto grid w-max grid-cols-1 justify-items-stretch gap-1.5">
                   <a
                     [routerLink]="['/livros', l.codl]"
                     class="terra-btn-outline w-full justify-center no-underline"
