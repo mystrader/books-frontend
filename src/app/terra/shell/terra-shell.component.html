@@ -1,0 +1,187 @@
+<a
+  class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-3 focus:py-2 focus:text-[#2e3230]"
+  href="#conteudo-principal"
+  >Pular para o conteúdo</a
+>
+
+<div class="flex min-h-screen bg-[#faf6f0] text-[#2e3230] antialiased">
+  <aside
+    class="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-zinc-200 bg-white px-5 py-6 font-[family-name:var(--font-body)]"
+  >
+    <div class="mb-8 px-1">
+      <a
+        routerLink="/dashboard"
+        class="block rounded-md outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-zinc-400"
+      >
+        <img
+          src="logo/TJbooks_logo.svg"
+          alt="Terra Library — Portal de gestão"
+          width="787"
+          height="217"
+          class="h-11 w-auto max-w-full object-contain object-left"
+          loading="eager"
+          decoding="async"
+        />
+      </a>
+    </div>
+
+    <nav class="flex flex-1 flex-col gap-1" aria-label="Principal">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="terra-nav-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        href="/dashboard"
+      >
+        <span
+          class="material-symbols-outlined shrink-0 text-[22px] text-[var(--terra-accent-dashboard)]"
+          aria-hidden="true"
+          >dashboard</span
+        >
+        <span class="font-semibold">Dashboard</span>
+      </a>
+      <a
+        routerLink="/livros"
+        routerLinkActive="terra-nav-active"
+        [routerLinkActiveOptions]="{
+          paths: 'subset',
+          queryParams: 'ignored',
+          fragment: 'ignored',
+          matrixParams: 'ignored',
+        }"
+        class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        href="/livros"
+      >
+        <span
+          class="material-symbols-outlined shrink-0 text-[22px] text-[var(--terra-accent-inventario)]"
+          aria-hidden="true"
+          >library_books</span
+        >
+        <span>Inventário</span>
+      </a>
+      <a
+        routerLink="/autores"
+        routerLinkActive="terra-nav-active"
+        class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        href="/autores"
+      >
+        <span
+          class="material-symbols-outlined shrink-0 text-[22px] text-[var(--terra-accent-autores)]"
+          aria-hidden="true"
+          >group</span
+        >
+        <span>Autores</span>
+      </a>
+      <a
+        routerLink="/assuntos"
+        routerLinkActive="terra-nav-active"
+        class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        href="/assuntos"
+      >
+        <span
+          class="material-symbols-outlined shrink-0 text-[22px] text-[var(--terra-accent-assuntos)]"
+          aria-hidden="true"
+          >label</span
+        >
+        <span>Assuntos</span>
+      </a>
+      <a
+        routerLink="/relatorio"
+        routerLinkActive="terra-nav-active"
+        class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        href="/relatorio"
+      >
+        <span
+          class="material-symbols-outlined shrink-0 text-[22px] text-[var(--terra-accent-relatorio)]"
+          aria-hidden="true"
+          >analytics</span
+        >
+        <span>Relatório</span>
+      </a>
+    </nav>
+
+    <div class="mt-auto border-t border-zinc-200 pt-4">
+      <div class="rounded-md border border-zinc-200 bg-zinc-100 px-3 py-2 text-xs text-zinc-500">
+        Prova técnica · UX/UI + Angular
+      </div>
+    </div>
+  </aside>
+
+  <div class="ml-64 flex min-h-screen min-w-0 flex-1 flex-col">
+    <header
+      class="sticky top-0 z-30 flex items-center justify-between border-b border-stone-200/40 bg-white px-4 py-4"
+    >
+      <div #buscaWrap class="relative z-50 w-full max-w-xl">
+        <span
+          class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-stone-400 text-[22px]"
+          aria-hidden="true"
+          >search</span
+        >
+        <input
+          type="search"
+          name="q"
+          autocomplete="off"
+          [value]="termoBusca()"
+          (input)="onBuscaInput($event)"
+          (focus)="onBuscaFocus()"
+          class="w-full rounded-full border border-stone-200/30 bg-stone-100/50 py-2.5 pl-11 pr-4 text-sm text-[#2e3230] placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#4a7c59]/35"
+          placeholder="Buscar título, autor, editora…"
+          aria-label="Buscar no acervo"
+          aria-autocomplete="list"
+          [attr.aria-expanded]="buscaAberta() && termoBusca().trim().length > 0"
+          aria-controls="sugestoes-acervo"
+        />
+        @if (buscaAberta() && termoBusca().trim().length > 0) {
+          <div
+            id="sugestoes-acervo"
+            class="absolute left-0 right-0 top-[calc(100%+6px)] max-h-[min(70vh,22rem)] overflow-y-auto rounded-2xl border border-stone-200/40 bg-[#f7f5f2]/95 py-2 shadow-[0_16px_40px_-16px_rgba(46,50,48,0.1)]"
+            role="listbox"
+          >
+            @for (l of sugestoes(); track l.codl) {
+              <a
+                [routerLink]="['/livros', l.codl]"
+                (click)="fecharSugestoes()"
+                class="flex gap-3 px-3 py-2.5 transition hover:bg-stone-100/55"
+                role="option"
+              >
+                <div class="terra-book-cover--sm h-[4.5rem] w-12 shrink-0">
+                  <img
+                    terraCapaFallback
+                    [src]="capaLista(l)"
+                    [alt]="'Capa: ' + l.titulo"
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm font-semibold text-[#2e3230]">{{ l.titulo }}</p>
+                  <p class="truncate text-xs text-stone-500">{{ linhaAutores(l) }}</p>
+                  <p class="mt-0.5 text-[11px] tabular-nums text-stone-400">
+                    {{ l.ano_publicacao ?? '—' }} · {{ formatBrl(l.valor) }}
+                  </p>
+                </div>
+              </a>
+            } @empty {
+              <p class="px-4 py-6 text-center text-sm text-stone-500">Nenhum título no acervo com esse termo.</p>
+            }
+          </div>
+        }
+      </div>
+      <div class="flex items-center gap-5">
+        <div class="flex items-center gap-3 border-l border-stone-200 pl-4">
+          <span class="text-sm font-[family-name:var(--font-body)] text-[#2e3230]">Admin Terra</span>
+          <span
+            class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#4a7c59] bg-stone-100/70 text-sm font-semibold text-[#4a7c59]"
+            aria-hidden="true"
+            >AT</span
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="conteudo-principal" class="min-w-0 flex-1 overflow-x-hidden bg-[#f7f5f2]">
+      <router-outlet />
+    </main>
+  </div>
+</div>

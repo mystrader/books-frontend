@@ -1,0 +1,102 @@
+<div class="terra-page font-[family-name:var(--font-body)]">
+  <a routerLink="/dashboard" class="terra-back-btn mb-6 no-underline">
+    <span class="material-symbols-outlined text-[18px] leading-none" aria-hidden="true">arrow_back</span>
+    Voltar ao painel
+  </a>
+
+  <header class="mb-6 flex flex-col gap-4 border-b border-zinc-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Cadastro · Assuntos</p>
+      <div class="mt-2 flex items-start gap-3">
+        <span
+          class="material-symbols-outlined shrink-0 pt-1 text-[1.875rem] leading-none text-[var(--terra-accent-assuntos)]"
+          aria-hidden="true"
+          >label</span
+        >
+        <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+          Assuntos
+        </h1>
+      </div>
+      <p class="mt-2 max-w-2xl text-sm text-zinc-600">Categorias para classificação dos livros (N:N).</p>
+    </div>
+    <button type="button" (click)="abrirNovo()" class="terra-btn-default shrink-0">
+      <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">label</span>
+      Novo assunto
+    </button>
+  </header>
+
+  @if (erro(); as e) {
+    <p class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ e }}</p>
+  }
+
+  <div class="terra-table-wrap">
+    <table class="terra-data-table">
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th class="text-right">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of assuntos(); track s.cod_as) {
+          <tr>
+            <td class="font-medium text-zinc-900">{{ s.descricao }}</td>
+            <td class="text-right align-middle">
+              <div class="ms-auto grid w-max grid-cols-1 justify-items-stretch gap-1.5">
+                <button type="button" (click)="editar(s)" class="terra-btn-outline w-full justify-center">
+                  <span class="material-symbols-outlined text-[16px] leading-none text-zinc-600" aria-hidden="true"
+                    >edit</span
+                  >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  (click)="excluir(s)"
+                  class="terra-btn-outline terra-btn-destructive w-full justify-center"
+                >
+                  <span class="material-symbols-outlined text-[16px] leading-none" aria-hidden="true">delete</span>
+                  Remover
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="2" class="py-10 text-center text-sm text-zinc-500">Nenhum assunto cadastrado.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (modalAberto()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 p-4 backdrop-blur-[2px]"
+    (click)="fechar()"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="w-full max-w-md rounded-md border border-zinc-200 bg-white p-6 shadow-lg"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 class="font-[family-name:var(--font-display)] text-xl font-semibold text-zinc-900">
+        {{ editando() ? 'Editar assunto' : 'Novo assunto' }}
+      </h2>
+      <form class="mt-6 grid gap-4" [formGroup]="form" (ngSubmit)="salvar()">
+        <label class="grid gap-1.5 text-xs font-medium text-zinc-500">
+          Descrição
+          <input
+            class="flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.descricao"
+          />
+        </label>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" class="terra-btn-outline h-9 px-4 text-sm" (click)="fechar()">Cancelar</button>
+          <button type="submit" class="terra-btn-default text-sm" [disabled]="form.invalid">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

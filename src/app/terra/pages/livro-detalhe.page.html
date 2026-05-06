@@ -1,0 +1,187 @@
+<div class="terra-page min-h-full font-[family-name:var(--font-body)]">
+  <a routerLink="/dashboard" class="terra-back-btn mb-6 no-underline">
+    <span class="material-symbols-outlined text-[18px] leading-none" aria-hidden="true">arrow_back</span>
+    Voltar ao painel
+  </a>
+
+  @if (loading()) {
+    <div class="animate-pulse space-y-8">
+      <div class="h-4 w-48 rounded-md bg-zinc-200/60"></div>
+      <div class="h-9 max-w-xl rounded-md bg-zinc-200/50"></div>
+      <div class="grid gap-6 lg:grid-cols-[minmax(0,38%)_1fr]">
+        <div class="h-80 rounded-md bg-zinc-200/40"></div>
+        <div class="h-96 rounded-md bg-zinc-200/35"></div>
+      </div>
+    </div>
+  } @else if (erro(); as msg) {
+    <div class="space-y-4">
+      <p class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ msg }}</p>
+      <a routerLink="/livros" class="terra-btn-outline no-underline inline-flex">Ir ao inventário</a>
+    </div>
+  } @else if (livro(); as l) {
+    <nav class="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+      <a routerLink="/livros" class="font-medium text-[var(--terra-accent-inventario)] transition hover:underline"
+        >Inventário</a
+      >
+      <span class="text-zinc-300" aria-hidden="true">/</span>
+      <span class="text-zinc-700">Ficha</span>
+    </nav>
+
+    <header class="mb-6 flex flex-col gap-4 border-b border-zinc-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <div class="min-w-0">
+        <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Inventário · Ficha do exemplar</p>
+        <div class="mt-2 flex items-start gap-3">
+          <span
+            class="material-symbols-outlined shrink-0 pt-1 text-[1.875rem] leading-none text-[var(--terra-accent-inventario)]"
+            aria-hidden="true"
+            >menu_book</span
+          >
+          <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+            {{ l.titulo }}
+          </h1>
+        </div>
+        <p class="mt-2 max-w-2xl text-sm text-zinc-600">
+          Consulta somente leitura — autores, assuntos, edição e observações.
+        </p>
+      </div>
+      <a routerLink="/livros" class="terra-btn-default shrink-0 no-underline">
+        <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">menu_book</span>
+        Inventário
+      </a>
+    </header>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,38%)_1fr] lg:items-start lg:gap-8">
+      <div class="min-w-0">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">Capa do livro</p>
+        <div class="terra-table-wrap flex min-h-[min(20rem,50vh)] items-center justify-center p-6 sm:min-h-[22rem]">
+          <div class="terra-book-cover-raise w-full max-w-[280px]">
+            <div class="terra-book-cover aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200">
+              <img
+                terraCapaFallback
+                [src]="capaSrc(l)"
+                [alt]="'Capa de ' + l.titulo"
+                width="280"
+                height="420"
+                class="h-full w-full object-cover"
+                loading="eager"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-4 flex gap-3 rounded-md border border-zinc-200 bg-zinc-50/90 p-4 text-xs leading-relaxed text-zinc-600"
+          role="note"
+        >
+          <span class="material-symbols-outlined shrink-0 text-[20px] text-zinc-500" aria-hidden="true">info</span>
+          <p>
+            <span class="font-semibold text-zinc-800">Dica:</span>
+            a imagem segue a URL cadastrada; se falhar, usamos capa substituta no app.
+          </p>
+        </div>
+      </div>
+
+      <div class="terra-table-wrap overflow-hidden">
+        <section class="border-b border-zinc-200 p-4 sm:p-5">
+          <div class="mb-4 flex items-center gap-2">
+            <span
+              class="material-symbols-outlined text-xl text-[var(--terra-accent-inventario)]"
+              aria-hidden="true"
+              >menu_book</span
+            >
+            <h2 class="font-[family-name:var(--font-display)] text-base font-semibold text-zinc-900 sm:text-lg">
+              Informações gerais
+            </h2>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="mb-1.5 block text-xs font-medium text-zinc-500">Título do livro</label>
+              <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm">
+                {{ l.titulo }}
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="mb-1.5 block text-xs font-medium text-zinc-500">Autor</label>
+                <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm">
+                  {{ nomesAutores(l) }}
+                </div>
+              </div>
+              <div>
+                <label class="mb-1.5 block text-xs font-medium text-zinc-500">Assunto / categoria</label>
+                <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm">
+                  {{ nomesAssuntos(l) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="border-b border-zinc-200 p-4 sm:p-5">
+          <div class="mb-4 flex items-center gap-2">
+            <span
+              class="material-symbols-outlined text-xl text-[var(--terra-accent-inventario)]"
+              aria-hidden="true"
+              >local_library</span
+            >
+            <h2 class="font-[family-name:var(--font-display)] text-base font-semibold text-zinc-900 sm:text-lg">
+              Dados da edição
+            </h2>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block text-xs font-medium text-zinc-500">Editora</label>
+              <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm">
+                {{ l.editora ?? '—' }}
+              </div>
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-medium text-zinc-500">Ano de publicação</label>
+              <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm tabular-nums text-zinc-900 shadow-sm">
+                {{ l.ano_publicacao ?? '—' }}
+              </div>
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-medium text-zinc-500">Valor (R$)</label>
+              <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm tabular-nums text-zinc-900 shadow-sm">
+                {{ formatBrl(l.valor) }}
+              </div>
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-medium text-zinc-500">ISBN-13</label>
+              <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm tabular-nums text-zinc-900 shadow-sm">
+                —
+              </div>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="mb-1.5 block text-xs font-medium text-zinc-500">Edição</label>
+              <div class="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm tabular-nums text-zinc-900 shadow-sm">
+                {{ l.edicao ?? '—' }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="p-4 sm:p-5">
+          <div class="mb-4 flex items-center gap-2">
+            <span
+              class="material-symbols-outlined text-xl text-[var(--terra-accent-inventario)]"
+              aria-hidden="true"
+              >description</span
+            >
+            <h2 class="font-[family-name:var(--font-display)] text-base font-semibold text-zinc-900 sm:text-lg">
+              Observações
+            </h2>
+          </div>
+          <div>
+            <label class="mb-1.5 block text-xs font-medium text-zinc-500">Sinopse e notas do exemplar</label>
+            <div
+              class="min-h-[8rem] whitespace-pre-wrap rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm leading-relaxed text-zinc-800 shadow-sm"
+            >
+              {{ l.observacoes?.trim() || 'Nenhuma observação registrada.' }}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  }
+</div>

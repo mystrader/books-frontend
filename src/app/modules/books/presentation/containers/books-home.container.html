@@ -1,0 +1,145 @@
+<a class="skip-link" href="#catalogo">Pular para catalogo</a>
+
+<main class="page-shell">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="kicker">LIVRARIA PREMIUM</p>
+      <h1>Colecao elegante para leitores exigentes</h1>
+      <p class="subtitle">
+        Curadoria visual clean com foco em leitura. Integracao de acervo roda em segundo plano, sem ruído na interface.
+      </p>
+      <div class="hero-actions">
+        <button type="button" class="btn btn-primary" (click)="openCreateModal()">Novo Livro</button>
+        <p class="meta">{{ totalBooks() }} titulos ativos</p>
+      </div>
+    </div>
+
+    <div class="search-panel">
+      <label for="book-search">Buscar no catalogo</label>
+      <input
+        id="book-search"
+        type="search"
+        name="search"
+        aria-label="Buscar livro no catalogo"
+        autocomplete="off"
+        placeholder="Ex: fantasia, classicos…"
+        (input)="onSearch($any($event.target).value)"
+      />
+    </div>
+  </section>
+
+  <section class="featured" aria-label="Destaques da colecao">
+    <header>
+      <h2>Destaques</h2>
+    </header>
+
+    <div class="featured-track">
+      @for (book of featuredBooks(); track trackById($index, book)) {
+        <article class="featured-item">
+          <app-book-card [book]="book" />
+        </article>
+      } @empty {
+        <p class="empty">Carregando vitrine…</p>
+      }
+    </div>
+  </section>
+
+  <section id="catalogo" class="catalog-grid">
+    <header class="catalog-header">
+      <h2>Catalogo completo</h2>
+      <p>{{ state.filteredBooks().length }} resultados</p>
+    </header>
+
+    @if (state.loading()) {
+      <p class="empty">Carregando livros…</p>
+    } @else {
+      <div class="books-grid">
+        @for (book of state.filteredBooks(); track trackById($index, book)) {
+          <div class="book-slot">
+            <app-book-card [book]="book" />
+            <div class="card-actions">
+              <button type="button" class="btn btn-soft" (click)="onEdit(book)">Editar</button>
+              <button type="button" class="btn btn-danger" (click)="removeBook(book.id)">Remover</button>
+            </div>
+          </div>
+        } @empty {
+          <p class="empty">Nenhum livro encontrado para busca atual.</p>
+        }
+      </div>
+    }
+  </section>
+
+  @if (showForm()) {
+    <section class="modal-backdrop" (click)="closeModal()">
+      <article class="modal-card" (click)="$event.stopPropagation()">
+        <header>
+          <h3>{{ selectedBook() ? 'Editar livro' : 'Novo livro' }}</h3>
+          <button type="button" class="close-btn" aria-label="Fechar formulario" (click)="closeModal()">
+            ✕
+          </button>
+        </header>
+
+        <form class="book-form">
+          <label for="title">Titulo</label>
+          <input id="title" type="text" name="title" autocomplete="off" [formControl]="form.controls.title" />
+
+          <label for="year">Ano de publicacao</label>
+          <input
+            id="year"
+            type="number"
+            name="publicationYear"
+            inputmode="numeric"
+            autocomplete="off"
+            [formControl]="form.controls.publication_year"
+          />
+
+          <label for="authors">Autores</label>
+          <select
+            id="authors"
+            name="authors"
+            multiple
+            aria-label="Selecionar autores"
+            (change)="onAuthorsChange($event)"
+          >
+            @for (author of state.authors(); track author.id) {
+              <option
+                [value]="author.id"
+                [selected]="(form.value.author_ids ?? []).includes(author.id)"
+              >
+                {{ author.name }}
+              </option>
+            }
+          </select>
+
+          <label for="subjects">Assuntos</label>
+          <select
+            id="subjects"
+            name="subjects"
+            multiple
+            aria-label="Selecionar assuntos"
+            (change)="onSubjectsChange($event)"
+          >
+            @for (subject of state.subjects(); track subject.id) {
+              <option
+                [value]="subject.id"
+                [selected]="(form.value.subject_ids ?? []).includes(subject.id)"
+              >
+                {{ subject.name }}
+              </option>
+            }
+          </select>
+
+          <footer>
+            <button type="button" class="btn btn-primary" [disabled]="state.saving()" (click)="saveBook()">
+              {{ state.saving() ? 'Salvando…' : selectedBook() ? 'Atualizar Livro' : 'Criar Livro' }}
+            </button>
+          </footer>
+        </form>
+
+        @if (state.error(); as error) {
+          <p class="error" aria-live="polite">{{ error }}</p>
+        }
+      </article>
+    </section>
+  }
+</main>

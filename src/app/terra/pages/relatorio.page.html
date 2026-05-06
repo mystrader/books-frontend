@@ -1,0 +1,87 @@
+<div class="terra-page font-[family-name:var(--font-body)]">
+  <a routerLink="/dashboard" class="terra-back-btn mb-6 no-underline">
+    <span class="material-symbols-outlined text-[18px] leading-none" aria-hidden="true">arrow_back</span>
+    Voltar ao painel
+  </a>
+
+  <header class="mb-6 border-b border-zinc-200 pb-6">
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Relatório · View SQL</p>
+      <div class="mt-2 flex items-start gap-3">
+        <span
+          class="material-symbols-outlined shrink-0 pt-1 text-[1.875rem] leading-none text-[var(--terra-accent-relatorio)]"
+          aria-hidden="true"
+          >analytics</span
+        >
+        <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+          Livros por autor
+        </h1>
+      </div>
+      <p class="mt-2 max-w-3xl text-sm text-zinc-600">
+        Dados agrupados por autor; um livro com vários autores aparece em cada grupo. Fonte:
+        <code class="rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-xs text-zinc-800"
+          >vw_relatorio_livros_por_autor</code
+        >.
+      </p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-zinc-500">Carregando…</p>
+  } @else if (erro(); as msg) {
+    <p class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ msg }}</p>
+  } @else if (data(); as rep) {
+    <p class="mb-6 text-sm text-zinc-600">
+      <span class="font-semibold tabular-nums text-zinc-900">{{ rep.total_linhas }}</span> linhas na view ·
+      <span class="font-semibold tabular-nums text-zinc-900">{{ rep.grupos.length }}</span> autores com obras
+    </p>
+
+    <div class="space-y-6">
+      @for (g of rep.grupos; track g.autor_id) {
+        <section class="terra-table-card">
+          <div class="terra-table-card-header flex items-baseline justify-between gap-3">
+            <div>
+              <h2 class="font-[family-name:var(--font-display)] text-lg font-semibold text-zinc-900 md:text-xl">
+                {{ g.autor_nome }}
+              </h2>
+              <p class="mt-0.5 text-xs font-medium uppercase tracking-wider text-zinc-500">
+                {{ g.livros.length }} título(s)
+              </p>
+            </div>
+            <span
+              class="material-symbols-outlined text-[var(--terra-accent-relatorio)]"
+              aria-hidden="true"
+              >groups</span
+            >
+          </div>
+          <div class="overflow-x-auto border-t border-zinc-200">
+            <table class="terra-data-table min-w-[640px]">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Editora</th>
+                  <th>Edição</th>
+                  <th>Ano</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (liv of g.livros; track liv.livro_id) {
+                  <tr>
+                    <td class="font-medium text-zinc-900">{{ liv.titulo }}</td>
+                    <td class="text-zinc-600">{{ liv.editora ?? '—' }}</td>
+                    <td class="tabular-nums text-zinc-600">{{ liv.edicao ?? '—' }}</td>
+                    <td class="tabular-nums text-zinc-600">{{ liv.ano_publicacao ?? '—' }}</td>
+                    <td class="tabular-nums text-zinc-900">{{ formatBrl(liv.valor) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      } @empty {
+        <p class="text-sm text-zinc-500">Nenhum dado retornado pela view.</p>
+      }
+    </div>
+  }
+</div>

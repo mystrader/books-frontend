@@ -1,0 +1,3 @@
+export const BOOKS_QUERY_KEY = 'BOOKS_LIST';
+export const AUTHORS_QUERY_KEY = 'AUTHORS_LIST';
+export const SUBJECTS_QUERY_KEY = 'SUBJECTS_LIST';

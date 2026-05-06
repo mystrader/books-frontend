@@ -1,12 +1,16 @@
 {
-  "name": "frontend",
+  "name": "app-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run build:css && concurrently -k \"npm run build:css:watch\" \"ng serve\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:css": "node scripts/compile-global-css.mjs",
+    "prebuild": "npm run build:css",
+    "serve:only": "ng serve",
+    "build:css:watch": "node scripts/watch-global-css.mjs"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
@@ -24,8 +28,12 @@
     "@angular/build": "^21.2.9",
     "@angular/cli": "^21.2.9",
     "@angular/compiler-cli": "^21.2.0",
+    "@tailwindcss/postcss": "^4.2.4",
+    "concurrently": "^9.2.1",
     "jsdom": "^28.0.0",
+    "postcss": "^8.5.14",
     "prettier": "^3.8.1",
+    "tailwindcss": "^4.2.4",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

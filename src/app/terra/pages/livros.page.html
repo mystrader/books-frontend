@@ -1,0 +1,357 @@
+<div class="terra-page font-[family-name:var(--font-body)]">
+  <a routerLink="/dashboard" class="terra-back-btn mb-6 no-underline">
+    <span class="material-symbols-outlined text-[18px] leading-none" aria-hidden="true">arrow_back</span>
+    Voltar ao painel
+  </a>
+
+  <header class="mb-6 flex flex-col gap-4 border-b border-zinc-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Inventário · Livros</p>
+      <div class="mt-2 flex items-start gap-3">
+        <span
+          class="material-symbols-outlined shrink-0 pt-1 text-[1.875rem] leading-none text-[var(--terra-accent-inventario)]"
+          aria-hidden="true"
+          >library_books</span
+        >
+        <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+          Registro de exemplar
+        </h1>
+      </div>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-600">
+        Listagem paginada para acervos grandes. Metadados e capas vêm da Open Library quando disponíveis.
+      </p>
+    </div>
+    <button type="button" (click)="abrirNovo()" class="terra-btn-default shrink-0">
+      <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">add</span>
+      Novo livro
+    </button>
+  </header>
+
+  @if (erro(); as e) {
+    <p class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ e }}</p>
+  }
+
+  <div class="terra-table-wrap">
+    <div class="w-full overflow-x-auto">
+      <table class="terra-data-table min-w-[860px]">
+        <thead>
+          <tr>
+            <th class="w-[4.5rem]">Capa</th>
+            <th>Título</th>
+            <th>Editora</th>
+            <th>Ano</th>
+            <th>Valor</th>
+            <th>Autores</th>
+            <th class="w-[1%] whitespace-nowrap text-right">Ações</th>
+          </tr>
+        </thead>
+      <tbody>
+        @if (carregando()) {
+          <tr>
+            <td colspan="7" class="py-16 text-center text-sm text-zinc-500">Carregando inventário…</td>
+          </tr>
+        } @else if (livros().length === 0) {
+          <tr>
+            <td colspan="7" class="py-14">
+              <div
+                class="mx-auto max-w-md rounded-md border border-dashed border-zinc-200 bg-zinc-50/50 px-8 py-10 text-center"
+              >
+                <span class="material-symbols-outlined mb-3 text-4xl text-zinc-400" aria-hidden="true">menu_book</span>
+                <p class="font-[family-name:var(--font-display)] text-lg font-medium text-zinc-900">Acervo vazio</p>
+                <p class="mt-2 text-sm leading-relaxed text-zinc-600">
+                  Nenhum título no banco. Rode o seed do Laravel ou
+                  <code class="rounded border border-zinc-200 bg-white px-1.5 py-0.5 text-xs">php artisan biblioteca:sync-acervo</code>
+                  no backend.
+                </p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (l of livros(); track l.codl) {
+            <tr>
+              <td>
+                <a [routerLink]="['/livros', l.codl]" class="block w-14 shrink-0" [attr.aria-label]="'Ver ' + l.titulo">
+                  <div class="terra-book-cover--sm aspect-[2/3] w-14">
+                    <img
+                      terraCapaFallback
+                      [src]="capaUrl(l)"
+                      [alt]="'Capa: ' + l.titulo"
+                      width="56"
+                      height="84"
+                      loading="lazy"
+                    />
+                  </div>
+                </a>
+              </td>
+              <td class="font-medium text-zinc-900">{{ l.titulo }}</td>
+              <td class="text-zinc-600">{{ l.editora ?? '—' }}</td>
+              <td class="tabular-nums text-zinc-600">{{ l.ano_publicacao ?? '—' }}</td>
+              <td class="tabular-nums text-zinc-900">{{ formatBrl(l.valor) }}</td>
+              <td class="max-w-[200px] truncate text-zinc-600" [title]="nomesAutores(l)">
+                {{ nomesAutores(l) }}
+              </td>
+              <td class="text-right align-middle">
+                <div class="ms-auto grid w-max grid-cols-1 justify-items-stretch gap-1.5">
+                  <a
+                    [routerLink]="['/livros', l.codl]"
+                    class="terra-btn-outline w-full justify-center no-underline"
+                  >
+                    <span class="material-symbols-outlined text-[16px] leading-none text-zinc-600" aria-hidden="true"
+                      >visibility</span
+                    >
+                    Detalhes
+                  </a>
+                  <button type="button" (click)="editar(l)" class="terra-btn-outline w-full justify-center">
+                    <span class="material-symbols-outlined text-[16px] leading-none text-zinc-600" aria-hidden="true"
+                      >edit</span
+                    >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    (click)="excluir(l)"
+                    class="terra-btn-outline terra-btn-destructive w-full justify-center"
+                  >
+                    <span class="material-symbols-outlined text-[16px] leading-none" aria-hidden="true">delete</span>
+                    Remover
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+      </table>
+    </div>
+
+    @if (!carregando() && meta(); as m) {
+      <div class="terra-table-footer flex flex-col items-stretch justify-between gap-4 px-4 py-4 sm:flex-row sm:items-center">
+        <p class="text-sm text-zinc-600">
+          @if (m.total === 0) {
+            Nenhum livro cadastrado.
+          } @else {
+            Mostrando
+            <span class="mx-0.5 font-semibold tabular-nums text-zinc-900">{{ m.from ?? '—' }}–{{ m.to ?? '—' }}</span>
+            de
+            <span class="ml-0.5 font-semibold tabular-nums text-zinc-900">{{ m.total }}</span>
+            <span class="ml-1 text-zinc-500">({{ perPage }} por página)</span>
+          }
+        </p>
+        @if (m.last_page > 1) {
+          <nav class="flex flex-wrap items-center justify-center gap-1.5" aria-label="Páginas do inventário">
+            <button
+              type="button"
+              (click)="irParaPagina(m.current_page - 1)"
+              [disabled]="m.current_page <= 1"
+              class="terra-btn-outline h-9 px-3 text-sm disabled:pointer-events-none disabled:opacity-40"
+            >
+              Anterior
+            </button>
+            @for (p of paginasVisiveis(); track p) {
+              <button
+                type="button"
+                (click)="irParaPagina(p)"
+                [class]="
+                  p === m.current_page
+                    ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-md bg-[#4a7c59] px-3 text-sm font-semibold text-white shadow-sm'
+                    : 'terra-btn-outline h-9 min-w-9 justify-center px-3 text-sm'
+                "
+              >
+                {{ p }}
+              </button>
+            }
+            <button
+              type="button"
+              (click)="irParaPagina(m.current_page + 1)"
+              [disabled]="m.current_page >= m.last_page"
+              class="terra-btn-outline h-9 px-3 text-sm disabled:pointer-events-none disabled:opacity-40"
+            >
+              Próxima
+            </button>
+          </nav>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (modalAberto()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+    (click)="fecharModal()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-livro-titulo"
+  >
+    <div
+      class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-stone-200 bg-white p-6 shadow-lg"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <h2 id="modal-livro-titulo" class="font-[family-name:var(--font-display)] text-2xl font-semibold text-[#2e3230]">
+          {{ editandoCodl() ? 'Editar livro' : 'Novo livro' }}
+        </h2>
+        <button
+          type="button"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-stone-200 bg-white text-stone-600 shadow-sm transition-colors hover:bg-stone-50"
+          (click)="fecharModal()"
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <form class="mt-6 grid gap-4 md:grid-cols-2" [formGroup]="form" (ngSubmit)="salvar()">
+        <label class="md:col-span-2 grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          Título
+          <input
+            class="flex h-10 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm ring-offset-white transition-colors placeholder:text-stone-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.titulo"
+          />
+        </label>
+        <label class="grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          Editora
+          <input
+            class="flex h-10 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.editora"
+          />
+        </label>
+        <label class="grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          Edição
+          <input
+            type="number"
+            class="flex h-10 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.edicao"
+          />
+        </label>
+        <label class="grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          Ano (AAAA)
+          <input
+            maxlength="4"
+            class="flex h-10 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.ano_publicacao"
+          />
+        </label>
+        <label class="grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          Valor (R$)
+          <input
+            #valorBrl
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="0,00"
+            class="flex h-10 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            (input)="onValorBrlInput($event)"
+          />
+        </label>
+        <label class="grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          <span class="flex items-center gap-2">
+            <span>URL da capa</span>
+            <span class="group relative inline-flex shrink-0">
+              <button
+                type="button"
+                class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                aria-label="Como montar a URL da capa"
+              >
+                <span class="material-symbols-outlined text-[17px] leading-none" aria-hidden="true">help</span>
+              </button>
+              <span
+                role="tooltip"
+                class="pointer-events-none absolute left-1/2 top-full z-[60] mt-2 w-[min(19rem,calc(100vw-2rem))] -translate-x-1/2 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-left text-[11px] font-normal normal-case leading-relaxed tracking-normal text-zinc-100 opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
+              >
+                Use um endereço <strong class="font-semibold text-white">https://…</strong> que abra
+                <strong class="font-semibold text-white">só a imagem</strong> (JPG, PNG ou WebP).
+                <span class="mt-2 block text-zinc-300">
+                  <span class="font-medium text-zinc-200">Open Library:</span> na ficha do livro, copie o ID da capa e monte
+                  <code class="mt-1 block break-all rounded bg-zinc-800 px-1.5 py-1 text-[10px] text-zinc-100"
+                    >https://covers.openlibrary.org/b/id/<span class="text-amber-200/90">ID</span>-L.jpg</code
+                  >
+                </span>
+                <span class="mt-2 block text-zinc-400"
+                  >Troque <code class="text-zinc-300">ID</code> pelo número. No final use
+                  <code class="text-zinc-300">-S</code> (pequena), <code class="text-zinc-300">-M</code> (média) ou
+                  <code class="text-zinc-300">-L</code> (grande).</span
+                >
+              </span>
+            </span>
+          </span>
+          <input
+            type="url"
+            inputmode="url"
+            autocomplete="off"
+            placeholder="https://covers.openlibrary.org/b/id/12345678-L.jpg"
+            class="flex h-10 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-stone-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.thumbnail"
+          />
+        </label>
+        <label class="md:col-span-2 grid gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
+          Observações
+          <textarea
+            rows="3"
+            class="flex min-h-[80px] w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a7c59]/25"
+            [formControl]="form.controls.observacoes"
+          ></textarea>
+        </label>
+
+        <div class="md:col-span-2 grid gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wide text-stone-500">Autores</span>
+          <div class="flex flex-wrap gap-2">
+            @for (a of autores(); track a.cod_au) {
+              <button
+                type="button"
+                (click)="toggleAutor(a.cod_au)"
+                [class]="
+                  autorMarcado(a.cod_au)
+                    ? 'rounded-full bg-[#4a7c59] px-3 py-1.5 text-xs font-semibold text-white'
+                    : 'rounded-full bg-[#f0ece4] px-3 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-200'
+                "
+              >
+                {{ a.nome }}
+              </button>
+            } @empty {
+              <p class="text-sm text-stone-500">Cadastre autores na área Autores.</p>
+            }
+          </div>
+        </div>
+
+        <div class="md:col-span-2 grid gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wide text-stone-500">Assuntos</span>
+          <div class="flex flex-wrap gap-2">
+            @for (s of assuntos(); track s.cod_as) {
+              <button
+                type="button"
+                (click)="toggleAssunto(s.cod_as)"
+                [class]="
+                  assuntoMarcado(s.cod_as)
+                    ? 'rounded-full bg-[#705c30] px-3 py-1.5 text-xs font-semibold text-white'
+                    : 'rounded-full bg-[#f0ece4] px-3 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-200'
+                "
+              >
+                {{ s.descricao }}
+              </button>
+            } @empty {
+              <p class="text-sm text-stone-500">Cadastre assuntos na área Assuntos.</p>
+            }
+          </div>
+        </div>
+
+        <div class="md:col-span-2 mt-2 flex justify-end gap-2">
+          <button
+            type="button"
+            class="inline-flex h-10 items-center rounded-md border border-stone-200 bg-white px-4 text-sm font-medium text-stone-800 shadow-sm hover:bg-stone-50"
+            (click)="fecharModal()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="inline-flex h-10 items-center rounded-md bg-[#4a7c59] px-4 text-sm font-semibold text-white shadow-sm hover:bg-[#3d6b4c] disabled:pointer-events-none disabled:opacity-50"
+            [disabled]="form.invalid"
+          >
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
