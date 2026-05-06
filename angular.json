@@ -71,7 +71,14 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "coverageExclude": [
+              "src/app/app.routes.ts",
+              "src/app/terra/pages/**/*.ts",
+              "src/app/terra/shell/**/*.ts"
+            ]
+          }
         }
       }
     }
