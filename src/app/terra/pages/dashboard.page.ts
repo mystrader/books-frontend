@@ -64,6 +64,9 @@ export class DashboardPage {
 
   protected readonly painelExplorarVitrineAberto = signal(false);
 
+  private ultimoCodlDestaque: number | null = null;
+
+  private readonly estilosBgDestaquePorCapa = new Map<string, SafeStyle>();
 
   private static insightTopFromMap(m: Map<string, number>, topN: number): InsightBar[] {
     const arr = [...m.entries()].map(([label, count]) => ({ label, count }));
@@ -154,7 +157,12 @@ export class DashboardPage {
     effect(() => {
       this.destaqueIndice();
       this.destaqueCarouselLivros();
-      this.destaqueCapaRgb.set(rgbPadraoSombraCapa());
+      const livro = this.livroDestaqueAtual();
+      const codl = livro?.codl ?? null;
+      if (codl !== this.ultimoCodlDestaque) {
+        this.ultimoCodlDestaque = codl;
+        this.destaqueCapaRgb.set(rgbPadraoSombraCapa());
+      }
     });
 
     this.api
@@ -166,8 +174,10 @@ export class DashboardPage {
         }),
         tap((lista) => {
           this.livros.set(lista);
-          this.destaqueCarouselLivros.set(DashboardPage.sortearDestaqueSlides(lista, 3));
-          const n = this.destaqueCarouselLivros().length;
+          const slides = DashboardPage.sortearDestaqueSlides(lista, 3);
+          this.destaqueCarouselLivros.set(slides);
+          this.precarregarCapasDestaqueSlides(slides);
+          const n = slides.length;
           if (n === 0) this.destaqueIndice.set(0);
           else if (this.destaqueIndice() >= n) this.destaqueIndice.set(0);
           queueMicrotask(() => this.atualizarIndiceVitrine());
@@ -216,11 +226,6 @@ export class DashboardPage {
     if (s.length === 0) return null;
     const i = Math.min(this.destaqueIndice(), s.length - 1);
     return s[i] ?? null;
-  }
-
-  protected destaqueAnimLista(): Livro[] {
-    const h = this.livroDestaqueAtual();
-    return h ? [h] : [];
   }
 
   protected irDestaqueSlide(i: number): void {
@@ -298,7 +303,7 @@ export class DashboardPage {
   }
 
   protected capaHero(l: Livro): string {
-    return capaOuPlaceholder(l.thumbnail);
+    return this.resolverCapaAltaDefinicaoParaBanner(l.thumbnail);
   }
 
   protected onCapaHeroDestaqueLoad(ev: Event): void {
@@ -310,15 +315,34 @@ export class DashboardPage {
 
   protected heroDestaqueBgImage(l: Livro): SafeStyle {
     const capa = this.resolverCapaAltaDefinicaoParaBanner(l.thumbnail);
-    const url = `url(${JSON.stringify(capa)})`;
-    return this.sanitizer.bypassSecurityTrustStyle(
-      [
-        'linear-gradient(to right, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 0.99) 30%, rgb(255 255 255 / 0.94) 50%, rgb(255 255 255 / 0.72) 66%, rgb(255 255 255 / 0.35) 82%, rgba(255, 255, 255, 0.1) 93%, transparent 99%)',
-        'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%)',
-        url,
-        'linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255))',
-      ].join(', ')
-    );
+    let cached = this.estilosBgDestaquePorCapa.get(capa);
+    if (!cached) {
+      const url = `url(${JSON.stringify(capa)})`;
+      cached = this.sanitizer.bypassSecurityTrustStyle(
+        [
+          'linear-gradient(to right, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 0.99) 30%, rgb(255 255 255 / 0.94) 50%, rgb(255 255 255 / 0.72) 66%, rgb(255 255 255 / 0.35) 82%, rgba(255, 255, 255, 0.1) 93%, transparent 99%)',
+          'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%)',
+          url,
+          'linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255))',
+        ].join(', ')
+      );
+      this.estilosBgDestaquePorCapa.set(capa, cached);
+      if (this.estilosBgDestaquePorCapa.size > 24) {
+        const primeiro = this.estilosBgDestaquePorCapa.keys().next().value as string | undefined;
+        if (primeiro !== undefined) this.estilosBgDestaquePorCapa.delete(primeiro);
+      }
+    }
+    return cached;
+  }
+
+  private precarregarCapasDestaqueSlides(livros: Livro[]): void {
+    if (typeof Image === 'undefined') return;
+    for (const l of livros) {
+      const url = this.resolverCapaAltaDefinicaoParaBanner(l.thumbnail);
+      if (url.startsWith('data:') || url.startsWith('blob:')) continue;
+      const img = new Image();
+      img.src = url;
+    }
   }
 
   private resolverCapaAltaDefinicaoParaBanner(thumbnail: string | null | undefined): string {
