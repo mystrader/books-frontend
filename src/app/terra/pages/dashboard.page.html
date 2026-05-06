@@ -35,11 +35,19 @@
             aria-hidden="true"
             >dashboard</span
           >
-          <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+          <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-medium tracking-[0.01em] text-zinc-900">
             Dashboard
           </h1>
         </div>
-        <p class="mt-2 max-w-2xl text-sm text-zinc-600">Destaques, vitrine em alta e atalhos do acervo.</p>
+        <div class="mt-2 flex max-w-2xl items-start gap-2 rounded-md border border-sky-200 bg-sky-50/70 px-3 py-2">
+          <p class="text-sm text-zinc-600">Destaques, vitrine em alta e atalhos do acervo.</p>
+          <span
+            class="material-symbols-outlined order-first mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-100 text-[14px] leading-none text-sky-700"
+            aria-label="Informações desta seção"
+            title="Visão geral com destaque, atalhos e vitrine do acervo."
+            >info</span
+          >
+        </div>
       </div>
     </header>
   }
@@ -63,10 +71,10 @@
                 class="pointer-events-none absolute inset-0 -z-10 rounded-md"
                 aria-hidden="true"
                 [style.backgroundImage]="heroDestaqueBgImage(hero)"
-                [style.backgroundSize]="'100% 100%, 100% 100%, min(34rem, 48%) auto'"
+                [style.backgroundSize]="'100% 100%, 100% 100%, auto 100%'"
                 [style.backgroundPosition]="'0 0, 0 0, right center'"
                 [style.backgroundRepeat]="'no-repeat, no-repeat, no-repeat'"
-                [style.opacity]="'0.84'"
+                [style.opacity]="'0.9'"
               ></div>
               <div
                 class="pointer-events-none absolute inset-0 -z-10 rounded-md bg-[radial-gradient(110%_62%_at_20%_4%,rgba(247,245,241,0.96)_0%,rgba(247,245,241,0.9)_36%,rgba(247,245,241,0.58)_62%,rgba(247,245,241,0)_100%)]"
@@ -83,7 +91,7 @@
               >
               <h2
                 id="destaque-section-title"
-                class="font-[family-name:var(--font-display)] text-lg font-bold leading-tight tracking-tight text-zinc-900 sm:text-xl [text-shadow:0_1px_0_rgb(255_255_255),0_0_12px_rgb(255_255_255)]"
+                class="font-[family-name:var(--font-display)] text-lg font-medium leading-tight tracking-tight text-zinc-900 sm:text-xl [text-shadow:0_1px_0_rgb(255_255_255),0_0_12px_rgb(255_255_255)]"
               >
                 Livro em destaque
               </h2>
@@ -119,7 +127,7 @@
             </div>
             <div class="relative z-10 flex min-w-0 flex-1 flex-col justify-center gap-4">
               <h1
-                class="text-balance font-[family-name:var(--font-display)] text-2xl font-bold leading-tight tracking-tight text-zinc-900 [text-shadow:0_1px_0_rgb(255_255_255_/_0.65)] sm:text-3xl"
+                class="text-balance font-[family-name:var(--font-display)] text-2xl font-medium leading-tight tracking-tight text-zinc-900 [text-shadow:0_1px_0_rgb(255_255_255_/_0.65)] sm:text-3xl"
               >
                 {{ hero.titulo }}
               </h1>
@@ -184,7 +192,7 @@
               >
               <h2
                 id="faixa-atalhos-titulo"
-                class="min-w-0 font-[family-name:var(--font-display)] text-lg font-bold leading-tight tracking-tight text-zinc-900 sm:text-xl"
+                class="min-w-0 font-[family-name:var(--font-display)] text-lg font-medium leading-tight tracking-tight text-zinc-900 sm:text-xl"
               >
                 Atalhos do acervo
               </h2>
@@ -208,7 +216,7 @@
                 >dashboard</span
               >
               <div class="min-w-0">
-                <p class="font-[family-name:var(--font-display)] text-sm font-bold leading-snug sm:text-[15px]">
+                <p class="font-[family-name:var(--font-display)] text-sm font-medium leading-snug sm:text-[15px]">
                   Painel
                 </p>
                 <p class="mt-0.5 line-clamp-2 text-[10px] leading-snug text-white/75 sm:text-xs">Visão geral e vitrine</p>
@@ -230,7 +238,7 @@
                 >library_books</span
               >
               <div class="min-w-0">
-                <p class="font-[family-name:var(--font-display)] text-sm font-bold leading-snug text-zinc-900 sm:text-[15px]">
+                <p class="font-[family-name:var(--font-display)] text-sm font-medium leading-snug text-zinc-900 sm:text-[15px]">
                   Inventário
                 </p>
                 <p class="mt-0.5 line-clamp-2 text-[10px] leading-snug text-zinc-600 sm:text-xs">Livros e valores</p>
@@ -253,7 +261,7 @@
                 >group</span
               >
               <div class="min-w-0">
-                <p class="font-[family-name:var(--font-display)] text-sm font-bold leading-snug text-zinc-900 sm:text-[15px]">
+                <p class="font-[family-name:var(--font-display)] text-sm font-medium leading-snug text-zinc-900 sm:text-[15px]">
                   Autores
                 </p>
                 <p class="mt-0.5 line-clamp-2 text-[10px] leading-snug text-zinc-600 sm:text-xs">Quem assina as obras</p>
@@ -276,7 +284,7 @@
                 >label</span
               >
               <div class="min-w-0">
-                <p class="font-[family-name:var(--font-display)] text-sm font-bold leading-snug text-zinc-900 sm:text-[15px]">
+                <p class="font-[family-name:var(--font-display)] text-sm font-medium leading-snug text-zinc-900 sm:text-[15px]">
                   Assuntos
                 </p>
                 <p class="mt-0.5 line-clamp-2 text-[10px] leading-snug text-zinc-600 sm:text-xs">Temas e categorias</p>
@@ -299,7 +307,7 @@
                 >bar_chart</span
               >
               <div class="min-w-0 flex-1">
-                <p class="font-[family-name:var(--font-display)] text-sm font-bold leading-snug text-zinc-900 sm:text-[15px]">
+                <p class="font-[family-name:var(--font-display)] text-sm font-medium leading-snug text-zinc-900 sm:text-[15px]">
                   Relatório
                 </p>
                 <p class="mt-0.5 text-[10px] leading-snug text-zinc-600 sm:text-xs">Resumo do acervo</p>
@@ -326,7 +334,7 @@
             >local_fire_department</span
           >
           <h2
-            class="font-[family-name:var(--font-display)] text-[22px] font-semibold leading-tight tracking-tight text-zinc-900"
+            class="font-[family-name:var(--font-display)] text-[22px] font-medium leading-tight tracking-tight text-zinc-900"
           >
             Em alta
           </h2>
@@ -387,7 +395,7 @@
             <div class="min-w-0">
               <h3
                 id="explorar-vitrine-titulo"
-                class="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-zinc-900 sm:text-xl"
+                class="font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-zinc-900 sm:text-xl"
               >
                 Explorar vitrine
               </h3>

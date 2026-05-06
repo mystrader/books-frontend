@@ -36,13 +36,19 @@
             aria-hidden="true"
             >menu_book</span
           >
-          <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+          <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-medium tracking-tight text-zinc-900">
             {{ l.titulo }}
           </h1>
         </div>
-        <p class="mt-2 max-w-2xl text-sm text-zinc-600">
-          Consulta somente leitura — autores, assuntos, edição e observações.
-        </p>
+        <div class="mt-2 flex max-w-2xl items-start gap-2 rounded-md border border-sky-200 bg-sky-50/70 px-3 py-2">
+          <p class="text-sm text-zinc-600">Consulta somente leitura — autores, assuntos, edição e observações.</p>
+          <span
+            class="material-symbols-outlined order-first mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-100 text-[14px] leading-none text-sky-700"
+            aria-label="Informações desta seção"
+            title="Esta tela é de consulta e não realiza edição do registro."
+            >info</span
+          >
+        </div>
       </div>
       <a routerLink="/livros" class="terra-btn-default shrink-0 no-underline">
         <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">menu_book</span>
@@ -88,7 +94,7 @@
               aria-hidden="true"
               >menu_book</span
             >
-            <h2 class="font-[family-name:var(--font-display)] text-base font-semibold text-zinc-900 sm:text-lg">
+            <h2 class="font-[family-name:var(--font-display)] text-base font-medium text-zinc-900 sm:text-lg">
               Informações gerais
             </h2>
           </div>
@@ -123,7 +129,7 @@
               aria-hidden="true"
               >local_library</span
             >
-            <h2 class="font-[family-name:var(--font-display)] text-base font-semibold text-zinc-900 sm:text-lg">
+            <h2 class="font-[family-name:var(--font-display)] text-base font-medium text-zinc-900 sm:text-lg">
               Dados da edição
             </h2>
           </div>
@@ -168,7 +174,7 @@
               aria-hidden="true"
               >description</span
             >
-            <h2 class="font-[family-name:var(--font-display)] text-base font-semibold text-zinc-900 sm:text-lg">
+            <h2 class="font-[family-name:var(--font-display)] text-base font-medium text-zinc-900 sm:text-lg">
               Observações
             </h2>
           </div>

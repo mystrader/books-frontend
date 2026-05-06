@@ -123,7 +123,8 @@ body {
     border-radius: 0.5rem;
     box-shadow:
       inset 14px 0 28px -12px rgba(0, 0, 0, 0.14),
-      0 18px 32px -8px rgba(46, 50, 48, 0.42),
+      inset -8px -6px 16px -14px rgba(255, 255, 255, 0.55),
+      0 20px 36px -10px rgba(46, 50, 48, 0.44),
       0 8px 14px -6px rgba(46, 50, 48, 0.22);
     transition: box-shadow 0.4s ease;
   }
@@ -134,20 +135,23 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 9px;
+    height: 11px;
     z-index: 2;
     pointer-events: none;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 11px 11px;
     background:
-      linear-gradient(180deg, rgba(242, 236, 224, 0.96) 0%, rgba(230, 221, 205, 0.9) 100%),
+      radial-gradient(130% 110% at 50% -30%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 62%),
+      linear-gradient(180deg, rgba(242, 236, 224, 0.97) 0%, rgba(228, 218, 201, 0.9) 100%),
       repeating-linear-gradient(
         90deg,
-        rgba(168, 156, 139, 0.28) 0 1px,
+        rgba(161, 148, 129, 0.3) 0 1px,
         rgba(255, 255, 255, 0) 1px 4px
       );
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.75),
-      0 3px 6px -3px rgba(38, 33, 27, 0.5);
+      inset 0 1px 0 rgba(255, 255, 255, 0.78),
+      inset 0 -1px 0 rgba(154, 139, 118, 0.24),
+      0 5px 8px -4px rgba(38, 33, 27, 0.56);
+    clip-path: ellipse(96% 100% at 50% 100%);
   }
 
   .terra-book-cover::after {
@@ -182,7 +186,8 @@ body {
     border-radius: 0.5rem;
     box-shadow:
       inset 10px 0 20px -10px rgba(0, 0, 0, 0.13),
-      0 10px 22px -6px rgba(46, 50, 48, 0.36),
+      inset -6px -5px 12px -12px rgba(255, 255, 255, 0.52),
+      0 12px 24px -8px rgba(46, 50, 48, 0.38),
       0 4px 10px -4px rgba(46, 50, 48, 0.2);
     transition: box-shadow 0.35s ease;
   }
@@ -193,20 +198,23 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 6px;
+    height: 7px;
     z-index: 2;
     pointer-events: none;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 9px 9px;
     background:
-      linear-gradient(180deg, rgba(241, 234, 220, 0.95) 0%, rgba(228, 218, 201, 0.88) 100%),
+      radial-gradient(130% 110% at 50% -38%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 62%),
+      linear-gradient(180deg, rgba(241, 234, 220, 0.95) 0%, rgba(226, 215, 196, 0.88) 100%),
       repeating-linear-gradient(
         90deg,
-        rgba(162, 151, 133, 0.24) 0 1px,
+        rgba(156, 144, 125, 0.26) 0 1px,
         rgba(255, 255, 255, 0) 1px 4px
       );
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.72),
-      0 2px 5px -3px rgba(38, 33, 27, 0.45);
+      inset 0 -1px 0 rgba(153, 139, 119, 0.22),
+      0 3px 5px -3px rgba(38, 33, 27, 0.48);
+    clip-path: ellipse(96% 100% at 50% 100%);
   }
 
   .terra-book-cover--sm::after {

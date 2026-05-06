@@ -256,7 +256,7 @@ export class DashboardPage {
     const url = `url(${JSON.stringify(capa)})`;
     return this.sanitizer.bypassSecurityTrustStyle(
       [
-        'linear-gradient(to right, rgb(247 245 241) 0%, rgb(247 245 241 / 0.995) 24%, rgb(247 245 241 / 0.9) 45%, rgb(247 245 241 / 0.6) 66%, rgb(247 245 241 / 0.24) 82%, transparent 95%)',
+        'linear-gradient(to right, rgb(247 245 241 / 1) 0%, rgb(247 245 241 / 0.998) 34%, rgb(247 245 241 / 0.95) 56%, rgb(247 245 241 / 0.72) 72%, rgb(247 245 241 / 0.36) 86%, rgb(247 245 241 / 0.12) 94%, transparent 99%)',
         'linear-gradient(180deg, rgba(250, 246, 240, 0.62) 0%, rgba(250, 246, 240, 0.62) 100%)',
         url,
       ].join(', ')

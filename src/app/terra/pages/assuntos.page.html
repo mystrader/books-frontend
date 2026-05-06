@@ -13,11 +13,19 @@
           aria-hidden="true"
           >label</span
         >
-        <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-zinc-900">
+        <h1 class="min-w-0 font-[family-name:var(--font-display)] text-3xl font-medium tracking-tight text-zinc-900">
           Assuntos
         </h1>
       </div>
-      <p class="mt-2 max-w-2xl text-sm text-zinc-600">Categorias para classificação dos livros (N:N).</p>
+      <div class="mt-2 flex max-w-2xl items-start gap-2 rounded-md border border-sky-200 bg-sky-50/70 px-3 py-2">
+        <p class="text-sm text-zinc-600">Categorias para classificação dos livros (N:N).</p>
+        <span
+          class="material-symbols-outlined order-first mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-100 text-[14px] leading-none text-sky-700"
+          aria-label="Informações desta seção"
+          title="Cada assunto pode classificar vários livros e cada livro pode ter vários assuntos."
+          >info</span
+        >
+      </div>
     </div>
     <button type="button" (click)="abrirNovo()" class="terra-btn-default shrink-0">
       <span class="material-symbols-outlined text-[1.125rem] leading-none" aria-hidden="true">label</span>
@@ -81,7 +89,7 @@
       class="w-full max-w-md rounded-md border border-zinc-200 bg-white p-6 shadow-lg"
       (click)="$event.stopPropagation()"
     >
-      <h2 class="font-[family-name:var(--font-display)] text-xl font-semibold text-zinc-900">
+      <h2 class="font-[family-name:var(--font-display)] text-xl font-medium text-zinc-900">
         {{ editando() ? 'Editar assunto' : 'Novo assunto' }}
       </h2>
       <form class="mt-6 grid gap-4" [formGroup]="form" (ngSubmit)="salvar()">
