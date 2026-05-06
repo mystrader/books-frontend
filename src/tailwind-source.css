@@ -128,6 +128,28 @@ body {
     transition: box-shadow 0.4s ease;
   }
 
+  .terra-book-cover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 9px;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: 0 0 10px 10px;
+    background:
+      linear-gradient(180deg, rgba(242, 236, 224, 0.96) 0%, rgba(230, 221, 205, 0.9) 100%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(168, 156, 139, 0.28) 0 1px,
+        rgba(255, 255, 255, 0) 1px 4px
+      );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      0 3px 6px -3px rgba(38, 33, 27, 0.5);
+  }
+
   .terra-book-cover::after {
     content: '';
     position: absolute;
@@ -163,6 +185,28 @@ body {
       0 10px 22px -6px rgba(46, 50, 48, 0.36),
       0 4px 10px -4px rgba(46, 50, 48, 0.2);
     transition: box-shadow 0.35s ease;
+  }
+
+  .terra-book-cover--sm::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 6px;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: 0 0 8px 8px;
+    background:
+      linear-gradient(180deg, rgba(241, 234, 220, 0.95) 0%, rgba(228, 218, 201, 0.88) 100%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(162, 151, 133, 0.24) 0 1px,
+        rgba(255, 255, 255, 0) 1px 4px
+      );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      0 2px 5px -3px rgba(38, 33, 27, 0.45);
   }
 
   .terra-book-cover--sm::after {

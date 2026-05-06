@@ -252,14 +252,40 @@ export class DashboardPage {
   }
 
   protected heroDestaqueBgImage(l: Livro): SafeStyle {
-    const capa = capaOuPlaceholder(l.thumbnail);
+    const capa = this.resolverCapaAltaDefinicaoParaBanner(l.thumbnail);
     const url = `url(${JSON.stringify(capa)})`;
     return this.sanitizer.bypassSecurityTrustStyle(
       [
-        'linear-gradient(to right, rgb(247 245 241) 0%, rgb(247 245 241 / 0.97) 18%, rgb(247 245 241 / 0.82) 36%, rgb(247 245 241 / 0.42) 58%, rgb(247 245 241 / 0.1) 78%, transparent 94%)',
-        'linear-gradient(180deg, rgba(250, 246, 240, 0.52) 0%, rgba(250, 246, 240, 0.52) 100%)',
+        'linear-gradient(to right, rgb(247 245 241) 0%, rgb(247 245 241 / 0.995) 24%, rgb(247 245 241 / 0.9) 45%, rgb(247 245 241 / 0.6) 66%, rgb(247 245 241 / 0.24) 82%, transparent 95%)',
+        'linear-gradient(180deg, rgba(250, 246, 240, 0.62) 0%, rgba(250, 246, 240, 0.62) 100%)',
         url,
       ].join(', ')
     );
+  }
+
+  private resolverCapaAltaDefinicaoParaBanner(thumbnail: string | null | undefined): string {
+    const capaBase = capaOuPlaceholder(thumbnail);
+    try {
+      const url = new URL(capaBase);
+      const host = url.hostname.toLowerCase();
+      if (host.includes('openlibrary.org')) {
+        url.pathname = url.pathname.replace(/-(s|m)\.(jpe?g|png)$/i, '-L.$2');
+      }
+      if (host.includes('images.unsplash.com')) {
+        const larguraAtual = Number(url.searchParams.get('w') ?? 0);
+        if (!Number.isFinite(larguraAtual) || larguraAtual < 1200) {
+          url.searchParams.set('w', '1200');
+        }
+        if (!url.searchParams.get('q')) {
+          url.searchParams.set('q', '80');
+        }
+        if (!url.searchParams.get('auto')) {
+          url.searchParams.set('auto', 'format');
+        }
+      }
+      return url.toString();
+    } catch {
+      return capaBase;
+    }
   }
 }
