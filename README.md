@@ -72,6 +72,20 @@ Os testes rodam com **Vitest** direto no terminal, sem precisar de browser.
 
 ## O que foi construído e por quê
 
+## Resumo arquitetural (clean code)
+
+Pensando na manutenção do projeto (e não só em “fazer funcionar”), a implementação seguiu alguns princípios simples:
+
+- **Separação de responsabilidades**: UI, regras de negócio, estado e integração HTTP ficam em camadas diferentes.
+- **Componentes pequenos e focados**: cada tela/componente tenta resolver um problema por vez.
+- **Código previsível**: nomes explícitos, poucos efeitos colaterais e fluxo de dados mais fácil de seguir.
+- **Reuso de utilitários**: formatação BRL, fallback de capa e helpers ficam centralizados para evitar duplicação.
+- **Evolução gradual da arquitetura**: o módulo `books` já está estruturado em estilo mais “domínio/aplicação/apresentação”, preparando o terreno para crescer sem virar “bola de neve”.
+
+Em resumo: a proposta foi equilibrar entrega rápida com base técnica sólida para continuar evoluindo o sistema com segurança.
+
+---
+
 ### Angular 21 com componentes standalone
 
 Sem `NgModule`. Cada componente declara suas próprias dependências via `imports`, o que torna cada arquivo mais autossuficiente e fácil de entender isoladamente. O roteamento usa lazy loading em todas as páginas — o browser só carrega o código de uma página quando o usuário navega até ela.
