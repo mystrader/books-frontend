@@ -20,7 +20,12 @@ Interface web do acervo de livros construída em **Angular 21** com **Tailwind C
 
 <img width="800" height="471" alt="CleanShot 2026-05-06 at 14 59 37" src="https://github.com/user-attachments/assets/c8fce98e-71e4-4b75-bfe3-a8436299f2fa" />
 
+###  Responsividade 
+#### (Obs.: foi configurado para ser uma pwa também com a logo que também foi elaborada no figma )
 
+<img width="800" height="611" alt="CleanShot 2026-05-06 at 15 04 42" src="https://github.com/user-attachments/assets/c3b1dcda-f85c-4a3e-aacb-190de6b8e270" />
+
+---
 
 ## Como rodar
 
