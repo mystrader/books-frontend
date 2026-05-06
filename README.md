@@ -1,4 +1,5 @@
-# Books Service — Frontend
+<img width="758" height="217" alt="image" src="https://github.com/user-attachments/assets/3814fbc5-85f3-4845-b2cb-4e98f6943f73" />
+
 
 Interface web do acervo de livros construída em **Angular 21** com **Tailwind CSS v4**. Consome a API do backend Laravel e oferece CRUD completo de livros, autores e assuntos, além de um relatório agrupado por autor.
 
