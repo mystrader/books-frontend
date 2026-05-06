@@ -26,6 +26,7 @@ import { formatBrl } from '../utils/format-brl';
 export class TerraShellComponent {
   private readonly api = inject(BibliotecaApiService);
   private readonly desktopBreakpoint = 1024;
+  private readonly darkModeStorageKey = 'terra-theme';
 
   protected readonly buscaWrap = viewChild<ElementRef<HTMLElement>>('buscaWrap');
 
@@ -33,6 +34,7 @@ export class TerraShellComponent {
   protected readonly termoBusca = signal('');
   protected readonly buscaAberta = signal(false);
   protected readonly menuAberto = signal(false);
+  protected readonly darkMode = signal(false);
   protected readonly viewportWidth = signal(typeof window === 'undefined' ? 1440 : window.innerWidth);
   protected readonly isDesktop = computed(() => this.viewportWidth() >= this.desktopBreakpoint);
   protected readonly formatBrl = formatBrl;
@@ -50,6 +52,7 @@ export class TerraShellComponent {
   });
 
   constructor() {
+    this.initTheme();
     this.api
       .listLivrosAll()
       .pipe(take(1))
@@ -78,6 +81,13 @@ export class TerraShellComponent {
 
   protected fecharMenu(): void {
     this.menuAberto.set(false);
+  }
+
+  protected toggleDarkMode(): void {
+    const next = !this.darkMode();
+    this.darkMode.set(next);
+    this.applyTheme(next);
+    localStorage.setItem(this.darkModeStorageKey, next ? 'dark' : 'light');
   }
 
   protected capaLista(l: Livro): string {
@@ -111,5 +121,18 @@ export class TerraShellComponent {
     if (window.innerWidth >= this.desktopBreakpoint) {
       this.menuAberto.set(false);
     }
+  }
+
+  private initTheme(): void {
+    if (typeof window === 'undefined') return;
+    const persisted = localStorage.getItem(this.darkModeStorageKey);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = persisted ? persisted === 'dark' : prefersDark;
+    this.darkMode.set(isDark);
+    this.applyTheme(isDark);
+  }
+
+  private applyTheme(isDark: boolean): void {
+    document.documentElement.classList.toggle('dark', isDark);
   }
 }

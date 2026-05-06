@@ -1058,6 +1058,12 @@
       background-color: color-mix(in oklab, var(--color-zinc-950) 40%, transparent);
     }
   }
+  .bg-zinc-950\/50 {
+    background-color: color-mix(in srgb, oklch(14.1% 0.005 285.823) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-zinc-950) 50%, transparent);
+    }
+  }
   .bg-gradient-to-r {
     --tw-gradient-position: to right in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
@@ -1393,6 +1399,15 @@
   }
   .text-amber-400 {
     color: var(--color-amber-400);
+  }
+  .text-black {
+    color: var(--color-black);
+  }
+  .text-black\/80 {
+    color: color-mix(in srgb, #000 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-black) 80%, transparent);
+    }
   }
   .text-emerald-700 {
     color: var(--color-emerald-700);
@@ -2358,7 +2373,160 @@ body {
   background-image: radial-gradient(ellipse 120% 80% at 10% -10%, rgba(74, 124, 89, 0.045), transparent 55%),
     radial-gradient(ellipse 90% 60% at 100% 0%, rgba(112, 92, 48, 0.035), transparent 50%);
 }
+html.dark,
+html.dark body {
+  color: #e5e7eb;
+  background-color: #111827;
+  background-image: radial-gradient(ellipse 120% 80% at 10% -10%, rgba(74, 124, 89, 0.12), transparent 58%),
+    radial-gradient(ellipse 90% 60% at 100% 0%, rgba(2, 132, 199, 0.1), transparent 54%);
+}
 @layer components {
+  html.dark .terra-logo {
+    filter: brightness(0) invert(1);
+  }
+  html.dark .text-\[\#2e3230\],
+  html.dark .text-zinc-900,
+  html.dark .text-zinc-800 {
+    color: #f3f4f6 !important;
+  }
+  html.dark .text-zinc-700,
+  html.dark .text-zinc-600,
+  html.dark .text-zinc-500,
+  html.dark .text-stone-600,
+  html.dark .text-stone-500 {
+    color: #d1d5db !important;
+  }
+  html.dark .text-stone-400,
+  html.dark .text-zinc-400 {
+    color: #9ca3af !important;
+  }
+  html.dark .text-sky-700 {
+    color: #7dd3fc !important;
+  }
+  html.dark .text-red-800 {
+    color: #fda4af !important;
+  }
+  html.dark .text-emerald-700 {
+    color: #6ee7b7 !important;
+  }
+  html.dark .bg-white,
+  html.dark .bg-zinc-50,
+  html.dark .bg-zinc-50\/50,
+  html.dark .bg-zinc-50\/70,
+  html.dark .bg-zinc-50\/90,
+  html.dark .bg-zinc-100,
+  html.dark .bg-zinc-100\/80,
+  html.dark .bg-stone-100\/50,
+  html.dark .bg-stone-100\/70,
+  html.dark .bg-\[\#f7f5f2\],
+  html.dark .bg-\[\#faf6f0\] {
+    background-color: #111827 !important;
+  }
+  html.dark .bg-zinc-200\/35,
+  html.dark .bg-zinc-200\/40,
+  html.dark .bg-zinc-200\/50,
+  html.dark .bg-zinc-200\/60 {
+    background-color: rgb(31 41 55 / 0.85) !important;
+  }
+  html.dark .bg-sky-50\/70 {
+    background-color: rgb(8 47 73 / 0.72) !important;
+  }
+  html.dark .bg-sky-100 {
+    background-color: rgb(12 74 110 / 0.7) !important;
+  }
+  html.dark .bg-red-50 {
+    background-color: rgb(69 10 10 / 0.45) !important;
+  }
+  html.dark .bg-emerald-50 {
+    background-color: rgb(6 78 59 / 0.36) !important;
+  }
+  html.dark .bg-\[\#f0ece4\] {
+    background-color: #1f2937 !important;
+  }
+  html.dark .border-zinc-200,
+  html.dark .border-zinc-100,
+  html.dark .border-stone-200,
+  html.dark .border-stone-200\/30,
+  html.dark .border-stone-200\/40 {
+    border-color: #374151 !important;
+  }
+  html.dark .border-sky-200 {
+    border-color: rgb(14 116 144 / 0.75) !important;
+  }
+  html.dark .border-red-200 {
+    border-color: rgb(190 24 93 / 0.65) !important;
+  }
+  html.dark .border-emerald-200 {
+    border-color: rgb(16 185 129 / 0.65) !important;
+  }
+  html.dark .terra-table-wrap,
+  html.dark .terra-table-card {
+    background-color: #111827;
+    border-color: #374151;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  }
+  html.dark .terra-table-card-header,
+  html.dark .terra-table-footer,
+  html.dark .terra-data-table thead {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+  html.dark .terra-data-table {
+    color: #e5e7eb;
+  }
+  html.dark .terra-data-table thead tr,
+  html.dark .terra-data-table tbody tr {
+    border-color: #374151;
+  }
+  html.dark .terra-data-table tbody tr:hover {
+    background-color: rgb(55 65 81 / 0.55);
+  }
+  html.dark .terra-back-btn,
+  html.dark .terra-btn-outline {
+    border-color: #4b5563;
+    background-color: #1f2937;
+    color: #e5e7eb;
+  }
+  html.dark .terra-back-btn:hover,
+  html.dark .terra-btn-outline:hover {
+    background-color: #374151;
+  }
+  html.dark .terra-btn-destructive {
+    border-color: rgb(244 63 94 / 0.7);
+    color: #fecdd3;
+  }
+  html.dark .terra-btn-destructive:hover {
+    background-color: rgb(159 18 57 / 0.32);
+    color: #ffe4e6;
+  }
+  html.dark .terra-btn-default:focus-visible,
+  html.dark .terra-btn-outline:focus-visible {
+    box-shadow: 0 0 0 2px #111827, 0 0 0 4px rgb(74 124 89 / 0.62);
+  }
+  html.dark input,
+  html.dark textarea,
+  html.dark select {
+    color: #f3f4f6;
+    background-color: #111827;
+    border-color: #374151;
+  }
+  html.dark input::placeholder,
+  html.dark textarea::placeholder {
+    color: #9ca3af;
+  }
+  html.dark .placeholder\:text-stone-400::placeholder {
+    color: #9ca3af !important;
+  }
+  html.dark .terra-nav-link:hover {
+    background-color: rgb(74 124 89 / 0.2);
+  }
+  html.dark .terra-nav-active {
+    background-color: rgb(74 124 89 / 0.35);
+    color: #f3f4f6;
+  }
+  html.dark .terra-nav-active:hover {
+    background-color: rgb(74 124 89 / 0.42);
+  }
   .terra-nav-link:hover {
     background-color: var(--terra-primary);
     @supports (color: color-mix(in lab, red, red)) {

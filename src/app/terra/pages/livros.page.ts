@@ -43,6 +43,9 @@ export class LivrosPage {
   protected readonly editandoCodl = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
   protected readonly carregando = signal(false);
+  protected readonly pendenteExclusao = signal<Livro | null>(null);
+  protected readonly sucesso = signal<string | null>(null);
+  private feedbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly formatBrl = formatBrl;
   protected readonly perPage = PER_PAGE;
@@ -193,19 +196,31 @@ export class LivrosPage {
     };
 
     const codl = this.editandoCodl();
+    const emEdicao = codl != null;
     const req$ = codl ? this.api.updateLivro(codl, payload) : this.api.createLivro(payload);
 
     req$.pipe(take(1)).subscribe({
       next: () => {
         this.modalAberto.set(false);
         this.recarregar();
+        this.mostrarSucesso(emEdicao ? 'Livro atualizado com sucesso.' : 'Livro cadastrado com sucesso.');
       },
       error: (err) => this.erro.set(mensagemApiErro(err, 'Não foi possível salvar o livro.')),
     });
   }
 
   protected excluir(l: Livro): void {
-    if (!confirm(`Remover "${l.titulo}"?`)) return;
+    this.pendenteExclusao.set(l);
+  }
+
+  protected cancelarExclusao(): void {
+    this.pendenteExclusao.set(null);
+  }
+
+  protected confirmarExclusao(): void {
+    const l = this.pendenteExclusao();
+    if (!l) return;
+    this.pendenteExclusao.set(null);
     this.api
       .deleteLivro(l.codl)
       .pipe(take(1))
@@ -219,6 +234,12 @@ export class LivrosPage {
         },
         error: (err) => this.erro.set(mensagemApiErro(err, 'Não foi possível remover.')),
       });
+  }
+
+  private mostrarSucesso(mensagem: string): void {
+    this.sucesso.set(mensagem);
+    if (this.feedbackTimer) clearTimeout(this.feedbackTimer);
+    this.feedbackTimer = setTimeout(() => this.sucesso.set(null), 3500);
   }
 
   protected toggleAutor(id: number): void {

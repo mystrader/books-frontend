@@ -23,6 +23,9 @@ export class AssuntosPage {
   protected readonly modalAberto = signal(false);
   protected readonly editando = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
+  protected readonly pendenteExclusao = signal<Assunto | null>(null);
+  protected readonly sucesso = signal<string | null>(null);
+  private feedbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly form = this.fb.group({
     descricao: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -59,18 +62,30 @@ export class AssuntosPage {
     if (this.form.invalid) return;
     const descricao = this.form.value.descricao!.trim();
     const id = this.editando();
+    const emEdicao = id != null;
     const req$ = id ? this.api.updateAssunto(id, descricao) : this.api.createAssunto(descricao);
     req$.pipe(take(1)).subscribe({
       next: () => {
         this.modalAberto.set(false);
         this.recarregar();
+        this.mostrarSucesso(emEdicao ? 'Assunto atualizado com sucesso.' : 'Assunto cadastrado com sucesso.');
       },
       error: (err) => this.erro.set(mensagemApiErro(err, 'Não foi possível salvar.')),
     });
   }
 
   protected excluir(s: Assunto): void {
-    if (!confirm(`Remover assunto "${s.descricao}"?`)) return;
+    this.pendenteExclusao.set(s);
+  }
+
+  protected cancelarExclusao(): void {
+    this.pendenteExclusao.set(null);
+  }
+
+  protected confirmarExclusao(): void {
+    const s = this.pendenteExclusao();
+    if (!s) return;
+    this.pendenteExclusao.set(null);
     this.api
       .deleteAssunto(s.cod_as)
       .pipe(take(1))
@@ -79,5 +94,11 @@ export class AssuntosPage {
         error: (err) =>
           this.erro.set(mensagemApiErro(err, 'Não foi possível remover (pode haver livros vinculados).')),
       });
+  }
+
+  private mostrarSucesso(mensagem: string): void {
+    this.sucesso.set(mensagem);
+    if (this.feedbackTimer) clearTimeout(this.feedbackTimer);
+    this.feedbackTimer = setTimeout(() => this.sucesso.set(null), 3500);
   }
 }

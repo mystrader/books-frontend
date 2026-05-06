@@ -27,7 +27,7 @@
           alt="Terra Library — Portal de gestão"
           width="787"
           height="217"
-          class="h-11 w-auto max-w-full object-contain object-left"
+          class="terra-logo h-11 w-auto max-w-full object-contain object-left"
           loading="eager"
           decoding="async"
         />
@@ -191,6 +191,17 @@
         }
       </div>
       <div class="hidden items-center gap-5 sm:flex">
+        <button
+          type="button"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 bg-white text-stone-700 shadow-sm transition hover:bg-stone-50"
+          (click)="toggleDarkMode()"
+          [attr.aria-label]="darkMode() ? 'Ativar modo claro' : 'Ativar modo escuro'"
+          [attr.title]="darkMode() ? 'Ativar modo claro' : 'Ativar modo escuro'"
+        >
+          <span class="material-symbols-outlined text-[20px]" aria-hidden="true">{{
+            darkMode() ? 'light_mode' : 'dark_mode'
+          }}</span>
+        </button>
         <div class="flex items-center gap-3 border-l border-stone-200 pl-4">
           <span class="text-sm font-[family-name:var(--font-body)] text-[#2e3230]">Admin Terra</span>
           <span

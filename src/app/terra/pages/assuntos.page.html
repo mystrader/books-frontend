@@ -36,6 +36,9 @@
   @if (erro(); as e) {
     <p class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ e }}</p>
   }
+  @if (sucesso(); as s) {
+    <p class="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ s }}</p>
+  }
 
   <div class="terra-table-wrap">
     <table class="terra-data-table">
@@ -105,6 +108,40 @@
           <button type="submit" class="terra-btn-default text-sm" [disabled]="form.invalid">Salvar</button>
         </div>
       </form>
+    </div>
+  </div>
+}
+
+
+@if (pendenteExclusao(); as assunto) {
+  <div
+    class="fixed inset-0 z-[60] flex items-center justify-center bg-zinc-950/50 p-4 backdrop-blur-[2px]"
+    (click)="cancelarExclusao()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirmar-exclusao-assunto-titulo"
+  >
+    <div
+      class="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-6 shadow-lg"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-[20px] text-red-800" aria-hidden="true">warning</span>
+        <div>
+          <h2 id="confirmar-exclusao-assunto-titulo" class="font-[family-name:var(--font-display)] text-lg font-medium text-zinc-900">
+            Confirmar exclusão
+          </h2>
+          <p class="mt-1 text-sm text-zinc-600">
+            Tem certeza que deseja remover o assunto <span class="font-semibold text-zinc-900">"{{ assunto.descricao }}"</span>?
+          </p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button type="button" class="terra-btn-outline h-9 px-4 text-sm" (click)="cancelarExclusao()">Cancelar</button>
+        <button type="button" class="terra-btn-outline terra-btn-destructive h-9 px-4 text-sm" (click)="confirmarExclusao()">
+          Excluir
+        </button>
+      </div>
     </div>
   </div>
 }

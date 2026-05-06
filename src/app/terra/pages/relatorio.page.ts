@@ -21,7 +21,7 @@ export class RelatorioPage {
   protected readonly loading = signal(true);
   protected readonly erro = signal<string | null>(null);
   protected readonly formatBrl = formatBrl;
-  protected readonly visualizacao = signal<'tabela' | 'cards'>('tabela');
+  protected readonly visualizacao = signal<'tabela' | 'cards'>('cards');
 
   constructor() {
     this.api.relatorioLivrosPorAutor().pipe(take(1)).subscribe({

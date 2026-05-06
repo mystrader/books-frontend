@@ -23,6 +23,9 @@ export class AutoresPage {
   protected readonly modalAberto = signal(false);
   protected readonly editando = signal<number | null>(null);
   protected readonly erro = signal<string | null>(null);
+  protected readonly sucesso = signal<string | null>(null);
+  private feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+  protected readonly pendenteExclusao = signal<Autor | null>(null);
 
   protected readonly form = this.fb.group({
     nome: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -59,18 +62,30 @@ export class AutoresPage {
     if (this.form.invalid) return;
     const nome = this.form.value.nome!.trim();
     const id = this.editando();
+    const emEdicao = id != null;
     const req$ = id ? this.api.updateAutor(id, nome) : this.api.createAutor(nome);
     req$.pipe(take(1)).subscribe({
       next: () => {
         this.modalAberto.set(false);
         this.recarregar();
+        this.mostrarSucesso(emEdicao ? 'Autor atualizado com sucesso.' : 'Autor cadastrado com sucesso.');
       },
       error: (err) => this.erro.set(mensagemApiErro(err, 'Não foi possível salvar.')),
     });
   }
 
   protected excluir(a: Autor): void {
-    if (!confirm(`Remover "${a.nome}"?`)) return;
+    this.pendenteExclusao.set(a);
+  }
+
+  protected cancelarExclusao(): void {
+    this.pendenteExclusao.set(null);
+  }
+
+  protected confirmarExclusao(): void {
+    const a = this.pendenteExclusao();
+    if (!a) return;
+    this.pendenteExclusao.set(null);
     this.api
       .deleteAutor(a.cod_au)
       .pipe(take(1))
@@ -79,5 +94,11 @@ export class AutoresPage {
         error: (err) =>
           this.erro.set(mensagemApiErro(err, 'Não foi possível remover (pode haver livros vinculados).')),
       });
+  }
+
+  private mostrarSucesso(mensagem: string): void {
+    this.sucesso.set(mensagem);
+    if (this.feedbackTimer) clearTimeout(this.feedbackTimer);
+    this.feedbackTimer = setTimeout(() => this.sucesso.set(null), 3500);
   }
 }
