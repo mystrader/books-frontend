@@ -123,6 +123,18 @@ O campo `valor` usa máscara BRL em tempo real durante a digitação (`src/app/t
 
 14 testes unitários cobrindo o componente principal: criação, filtros por assunto, ordenação A-Z / por ano / por valor, e montagem dos itens de navegação.
 
+### Cobertura de testes
+
+A imagem abaixo mostra a cobertura atual dos testes do frontend.
+
+![Cobertura de testes](./public/imagens/cobertura_testes.png)
+
+A cobertura foi priorizada nos fluxos críticos (estado, filtros e regras de exibição), para dar segurança na evolução sem travar a entrega.
+
+### Trade-offs adotados
+
+Para cumprir o prazo, priorizei os fluxos de maior valor (CRUD, dashboard e relatório) e concentrei os testes no comportamento crítico. Alguns refinamentos de UI e cobertura complementar podem evoluir na próxima iteração sem comprometer a base arquitetural.
+
 ---
 
 ## Variáveis e configuração
