@@ -4,7 +4,7 @@
   >Pular para o conteúdo</a
 >
 
-<div class="flex min-h-screen bg-[#faf6f0] text-[#2e3230] antialiased">
+<div class="flex min-h-screen flex-col bg-[#faf6f0] text-[#2e3230] antialiased lg:flex-row lg:items-stretch">
   @if (menuAberto()) {
     <button
       type="button"
@@ -14,8 +14,9 @@
     ></button>
   }
   <aside
-    class="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-zinc-200 bg-white px-5 py-6 font-[family-name:var(--font-body)] transition-transform duration-200"
-    [style.transform]="isDesktop() || menuAberto() ? 'translateX(0)' : 'translateX(-100%)'"
+    class="fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r border-zinc-200 bg-white px-5 py-6 font-[family-name:var(--font-body)] transition-transform duration-200 lg:static lg:z-auto lg:h-auto lg:translate-x-0 lg:self-stretch"
+    [class.-translate-x-full]="!isDesktop() && !menuAberto()"
+    [class.translate-x-0]="isDesktop() || menuAberto()"
   >
     <div class="mb-8 px-1">
       <a
@@ -121,7 +122,7 @@
     </div>
   </aside>
 
-  <div class="flex min-h-screen min-w-0 flex-1 flex-col lg:ml-64">
+  <div class="flex min-h-screen min-w-0 flex-1 flex-col lg:min-h-0">
     <header
       class="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-stone-200/40 bg-white px-4 py-3 sm:py-4"
     >
@@ -223,7 +224,7 @@
 
     <footer class="border-t border-stone-200/60 bg-white px-4 py-3">
       <p class="text-center text-xs text-zinc-500">
-        TJ Books · Projeto acadêmico · {{ dataProjeto | date: 'dd/MM/yyyy' }}
+        TJbooks · Projeto acadêmico · {{ dataProjeto | date: 'dd/MM/yyyy' }}
       </p>
     </footer>
   </div>

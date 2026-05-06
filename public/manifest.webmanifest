@@ -1,7 +1,7 @@
 {
-  "name": "Terra Library · Gestão literária",
-  "short_name": "Terra Library",
-  "description": "Portal de gestão de acervo — TJ Books",
+  "name": "TJbooks",
+  "short_name": "TJbooks",
+  "description": "Portal de gestão de acervo — TJbooks",
   "theme_color": "#4a7c59",
   "background_color": "#faf6f0",
   "display": "standalone",

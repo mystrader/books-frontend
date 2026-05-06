@@ -108,7 +108,7 @@ export class AutoresPage {
     const rows = this.autoresFiltrados().map((a) => [a.cod_au, a.nome]);
     exportTablePdf({
       fileName: 'autores.pdf',
-      title: 'TJ Books · Autores',
+      title: 'TJbooks · Autores',
       subtitle: `${rows.length} registro(s)`,
       head: ['Código', 'Nome'],
       body: rows,

@@ -108,7 +108,7 @@ export class AssuntosPage {
     const rows = this.assuntosFiltrados().map((s) => [s.cod_as, s.descricao]);
     exportTablePdf({
       fileName: 'assuntos.pdf',
-      title: 'TJ Books · Assuntos',
+      title: 'TJbooks · Assuntos',
       subtitle: `${rows.length} registro(s)`,
       head: ['Código', 'Descrição'],
       body: rows,

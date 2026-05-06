@@ -301,7 +301,7 @@ export class LivrosPage {
     ]);
     exportTablePdf({
       fileName: 'inventario-livros.pdf',
-      title: 'TJ Books · Inventário de livros',
+      title: 'TJbooks · Inventário de livros',
       subtitle: `${rows.length} registro(s) na página atual`,
       head: ['Código', 'Título', 'Editora', 'Ano', 'Valor', 'Autores'],
       body: rows,

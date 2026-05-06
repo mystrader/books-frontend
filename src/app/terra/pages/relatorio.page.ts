@@ -77,7 +77,7 @@ export class RelatorioPage {
     );
     exportTablePdf({
       fileName: 'relatorio-livros-por-autor.pdf',
-      title: 'TJ Books · Relatório de livros por autor',
+      title: 'TJbooks · Relatório de livros por autor',
       subtitle: `${rows.length} linha(s) da view ${rep.fonte}`,
       head: ['Autor', 'Título', 'Editora', 'Ano', 'Valor'],
       body: rows,
