@@ -1,0 +1,55 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/favicon.svg",
+          "/favicon.png",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "capas-openlibrary",
+      "urls": ["https://covers.openlibrary.org/**"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 300,
+        "maxAge": "30d",
+        "timeout": "10s",
+        "cacheOpaqueResponses": true
+      }
+    },
+    {
+      "name": "imagens-unsplash",
+      "urls": ["https://images.unsplash.com/**"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 80,
+        "maxAge": "14d",
+        "timeout": "10s",
+        "cacheOpaqueResponses": true
+      }
+    }
+  ]
+}
