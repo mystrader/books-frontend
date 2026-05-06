@@ -7,6 +7,21 @@ Interface web do acervo de livros construída em **Angular 21** com **Tailwind C
 
 ---
 
+
+### Página Inicial
+
+<img width="800" height="509" alt="CleanShot 2026-05-06 at 14 55 28" src="https://github.com/user-attachments/assets/d80d934f-8205-4736-bb1b-138c350767cf" />
+
+### Inventário
+
+<img width="800" height="507" alt="CleanShot 2026-05-06 at 14 57 52" src="https://github.com/user-attachments/assets/29c228c5-67c4-4e93-810e-943fffcc4bff" />
+
+### Relatórios
+
+<img width="800" height="471" alt="CleanShot 2026-05-06 at 14 59 37" src="https://github.com/user-attachments/assets/c8fce98e-71e4-4b75-bfe3-a8436299f2fa" />
+
+
+
 ## Como rodar
 
 ### Pré-requisitos
