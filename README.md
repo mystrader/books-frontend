@@ -1,4 +1,5 @@
-# Frontend
+<img width="758" height="217" alt="image" src="https://github.com/user-attachments/assets/3814fbc5-85f3-4845-b2cb-4e98f6943f73" />
+
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
 
