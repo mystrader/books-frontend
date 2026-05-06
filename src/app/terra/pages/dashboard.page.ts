@@ -26,6 +26,8 @@ import {
 import { capaOuPlaceholder } from '../utils/capa-placeholder';
 import { formatBrl } from '../utils/format-brl';
 
+type InsightBar = { label: string; count: number; pct: number };
+
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
@@ -61,6 +63,61 @@ export class DashboardPage {
   protected readonly ordemVitrine = signal<'titulo' | 'ano' | 'valor'>('titulo');
 
   protected readonly painelExplorarVitrineAberto = signal(false);
+
+
+  private static insightTopFromMap(m: Map<string, number>, topN: number): InsightBar[] {
+    const arr = [...m.entries()].map(([label, count]) => ({ label, count }));
+    arr.sort((a, b) => b.count - a.count);
+    const slice = arr.slice(0, topN);
+    const max = slice.reduce((mx, r) => Math.max(mx, r.count), 0) || 1;
+    return slice.map((row) => ({ ...row, pct: (row.count / max) * 100 }));
+  }
+
+  protected readonly graficoEditoras = computed(() => {
+    const m = new Map<string, number>();
+    for (const l of this.livros()) {
+      const k = l.editora?.trim() || 'Sem editora';
+      m.set(k, (m.get(k) ?? 0) + 1);
+    }
+    return DashboardPage.insightTopFromMap(m, 6);
+  });
+
+  protected readonly graficoAnos = computed((): InsightBar[] => {
+    const m = new Map<string, number>();
+    for (const l of this.livros()) {
+      const y = l.ano_publicacao?.trim();
+      if (!y || !/^\d{4}$/.test(y)) {
+        m.set('Sem ano', (m.get('Sem ano') ?? 0) + 1);
+      } else {
+        m.set(y, (m.get(y) ?? 0) + 1);
+      }
+    }
+    const arr = [...m.entries()].map(([label, count]) => ({ label, count }));
+    arr.sort((a, b) => {
+      if (a.label === 'Sem ano') return 1;
+      if (b.label === 'Sem ano') return -1;
+      return Number(b.label) - Number(a.label);
+    });
+    const slice = arr.slice(0, 8);
+    const max = slice.reduce((mx, r) => Math.max(mx, r.count), 0) || 1;
+    return slice.map((row) => ({ ...row, pct: (row.count / max) * 100 }));
+  });
+
+  protected readonly graficoAssuntos = computed(() => {
+    const m = new Map<string, number>();
+    for (const l of this.livros()) {
+      const ass = l.assuntos ?? [];
+      if (ass.length === 0) {
+        m.set('Sem assunto', (m.get('Sem assunto') ?? 0) + 1);
+      } else {
+        for (const a of ass) {
+          const k = a.descricao.trim() || 'Sem assunto';
+          m.set(k, (m.get(k) ?? 0) + 1);
+        }
+      }
+    }
+    return DashboardPage.insightTopFromMap(m, 6);
+  });
 
   protected readonly assuntosNoAcervo = computed(() => {
     const map = new Map<number, string>();
