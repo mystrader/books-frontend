@@ -5,8 +5,17 @@
 >
 
 <div class="flex min-h-screen bg-[#faf6f0] text-[#2e3230] antialiased">
+  @if (menuAberto()) {
+    <button
+      type="button"
+      class="fixed inset-0 z-30 bg-black/40 backdrop-blur-[2px] lg:hidden"
+      (click)="fecharMenu()"
+      aria-label="Fechar menu lateral"
+    ></button>
+  }
   <aside
-    class="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-zinc-200 bg-white px-5 py-6 font-[family-name:var(--font-body)]"
+    class="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-zinc-200 bg-white px-5 py-6 font-[family-name:var(--font-body)] transition-transform duration-200"
+    [style.transform]="isDesktop() || menuAberto() ? 'translateX(0)' : 'translateX(-100%)'"
   >
     <div class="mb-8 px-1">
       <a
@@ -31,6 +40,7 @@
         routerLinkActive="terra-nav-active"
         [routerLinkActiveOptions]="{ exact: true }"
         class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        (click)="fecharMenu()"
         href="/dashboard"
       >
         <span
@@ -50,6 +60,7 @@
           matrixParams: 'ignored',
         }"
         class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        (click)="fecharMenu()"
         href="/livros"
       >
         <span
@@ -63,6 +74,7 @@
         routerLink="/autores"
         routerLinkActive="terra-nav-active"
         class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        (click)="fecharMenu()"
         href="/autores"
       >
         <span
@@ -76,6 +88,7 @@
         routerLink="/assuntos"
         routerLinkActive="terra-nav-active"
         class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        (click)="fecharMenu()"
         href="/assuntos"
       >
         <span
@@ -89,6 +102,7 @@
         routerLink="/relatorio"
         routerLinkActive="terra-nav-active"
         class="terra-nav-link flex items-center gap-3 rounded-md px-4 py-3 text-zinc-700 transition duration-200"
+        (click)="fecharMenu()"
         href="/relatorio"
       >
         <span
@@ -107,11 +121,19 @@
     </div>
   </aside>
 
-  <div class="ml-64 flex min-h-screen min-w-0 flex-1 flex-col">
+  <div class="flex min-h-screen min-w-0 flex-1 flex-col lg:ml-64">
     <header
-      class="sticky top-0 z-30 flex items-center justify-between border-b border-stone-200/40 bg-white px-4 py-4"
+      class="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-stone-200/40 bg-white px-4 py-3 sm:py-4"
     >
-      <div #buscaWrap class="relative z-50 w-full max-w-xl">
+      <button
+        type="button"
+        class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-stone-200 bg-white text-stone-700 shadow-sm lg:hidden"
+        (click)="toggleMenu()"
+        aria-label="Abrir menu lateral"
+      >
+        <span class="material-symbols-outlined text-[20px]" aria-hidden="true">menu</span>
+      </button>
+      <div #buscaWrap class="relative z-50 w-full max-w-xl flex-1">
         <span
           class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-stone-400 text-[22px]"
           aria-hidden="true"
@@ -168,7 +190,7 @@
           </div>
         }
       </div>
-      <div class="flex items-center gap-5">
+      <div class="hidden items-center gap-5 sm:flex">
         <div class="flex items-center gap-3 border-l border-stone-200 pl-4">
           <span class="text-sm font-[family-name:var(--font-body)] text-[#2e3230]">Admin Terra</span>
           <span

@@ -25,12 +25,16 @@ import { formatBrl } from '../utils/format-brl';
 })
 export class TerraShellComponent {
   private readonly api = inject(BibliotecaApiService);
+  private readonly desktopBreakpoint = 1024;
 
   protected readonly buscaWrap = viewChild<ElementRef<HTMLElement>>('buscaWrap');
 
   protected readonly acervo = signal<Livro[]>([]);
   protected readonly termoBusca = signal('');
   protected readonly buscaAberta = signal(false);
+  protected readonly menuAberto = signal(false);
+  protected readonly viewportWidth = signal(typeof window === 'undefined' ? 1440 : window.innerWidth);
+  protected readonly isDesktop = computed(() => this.viewportWidth() >= this.desktopBreakpoint);
   protected readonly formatBrl = formatBrl;
 
   protected readonly sugestoes = computed(() => {
@@ -68,6 +72,14 @@ export class TerraShellComponent {
     this.buscaAberta.set(false);
   }
 
+  protected toggleMenu(): void {
+    this.menuAberto.update((aberto) => !aberto);
+  }
+
+  protected fecharMenu(): void {
+    this.menuAberto.set(false);
+  }
+
   protected capaLista(l: Livro): string {
     return capaOuPlaceholder(l.thumbnail);
   }
@@ -89,6 +101,15 @@ export class TerraShellComponent {
   onKeydown(ev: KeyboardEvent): void {
     if (ev.key === 'Escape') {
       this.buscaAberta.set(false);
+      this.menuAberto.set(false);
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.viewportWidth.set(window.innerWidth);
+    if (window.innerWidth >= this.desktopBreakpoint) {
+      this.menuAberto.set(false);
     }
   }
 }
