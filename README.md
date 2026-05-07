@@ -166,3 +166,23 @@ const API = 'http://localhost:8000/api';
 ```
 
 Para apontar para outro ambiente, altere essa constante antes do build.
+
+## Teste de usabilidade (Mapeamento )
+
+### Atenção
+
+<img width="714" height="759" alt="image" src="https://github.com/user-attachments/assets/2bf4dd02-2912-49d1-9455-08203f7cf577" />
+
+
+### Foco
+
+<img width="623" height="756" alt="image" src="https://github.com/user-attachments/assets/9df824d1-0e84-466e-889b-61ba7bbe9316" />
+
+### Contraste 
+
+<img width="176" height="58" alt="image" src="https://github.com/user-attachments/assets/3b6ed9ff-3f23-4f62-b974-f91712430bc6" />
+
+
+<img width="661" height="760" alt="image" src="https://github.com/user-attachments/assets/6f4c109e-a4ff-460e-b54d-42095f7aec37" />
+
+
