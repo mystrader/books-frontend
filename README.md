@@ -167,6 +167,10 @@ const API = 'http://localhost:8000/api';
 
 Para apontar para outro ambiente, altere essa constante antes do build.
 
+---
+
+# UX / UI 
+
 ## Teste de usabilidade (Mapeamento )
 
 ### Atenção
@@ -184,5 +188,12 @@ Para apontar para outro ambiente, altere essa constante antes do build.
 
 
 <img width="661" height="760" alt="image" src="https://github.com/user-attachments/assets/6f4c109e-a4ff-460e-b54d-42095f7aec37" />
+
+## Guia de Design (Clique para acessar)
+
+
+[![Projeto](https://github.com/user-attachments/assets/3048592e-a56a-44a2-b0ed-09c681d1c6bd)](https://veto-clump-39113998.figma.site/)
+
+
 
 
