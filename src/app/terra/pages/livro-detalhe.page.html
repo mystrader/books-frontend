@@ -19,14 +19,6 @@
       <a routerLink="/livros" class="terra-btn-outline no-underline inline-flex">Ir ao inventário</a>
     </div>
   } @else if (livro(); as l) {
-    <nav class="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
-      <a routerLink="/livros" class="font-medium text-[var(--terra-accent-inventario)] transition hover:underline"
-        >Inventário</a
-      >
-      <span class="text-zinc-300" aria-hidden="true">/</span>
-      <span class="text-zinc-700">Ficha</span>
-    </nav>
-
     <header class="mb-4 flex flex-col gap-4 pb-0 sm:flex-row sm:items-end sm:justify-between">
       <div class="min-w-0">
         <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Inventário · Ficha do exemplar</p>

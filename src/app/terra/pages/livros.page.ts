@@ -48,6 +48,7 @@ export class LivrosPage {
   protected readonly carregando = signal(false);
   protected readonly pendenteExclusao = signal<Livro | null>(null);
   protected readonly sucesso = signal<string | null>(null);
+  protected readonly ajudaCapaAberta = signal(false);
   private feedbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly formatBrl = formatBrl;
@@ -148,6 +149,7 @@ export class LivrosPage {
       autor_ids: [],
       assunto_ids: [],
     });
+    this.ajudaCapaAberta.set(false);
     this.modalAberto.set(true);
     queueMicrotask(() => this.syncValorBrlCampo());
   }
@@ -165,8 +167,13 @@ export class LivrosPage {
       autor_ids: l.autores?.map((a) => a.cod_au) ?? [],
       assunto_ids: l.assuntos?.map((s) => s.cod_as) ?? [],
     });
+    this.ajudaCapaAberta.set(false);
     this.modalAberto.set(true);
     queueMicrotask(() => this.syncValorBrlCampo());
+  }
+
+  protected toggleAjudaCapa(): void {
+    this.ajudaCapaAberta.update((v) => !v);
   }
 
   protected onValorBrlInput(ev: Event): void {
@@ -193,6 +200,7 @@ export class LivrosPage {
   }
 
   protected fecharModal(): void {
+    this.ajudaCapaAberta.set(false);
     this.modalAberto.set(false);
   }
 
